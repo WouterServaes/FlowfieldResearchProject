@@ -152,7 +152,7 @@ void App_Flowfield::Update(float deltaTime)
 		ImGui::Spacing();
 
 		if (ImGui::Button("Add Agent"))
-			AddAgent(BehaviorTypes::Wander);
+			AddAgent(BehaviorTypes::Seek);
 
 		if (ImGui::Button("Add Obstacle"))
 			AddObstacle();
@@ -315,24 +315,8 @@ void App_Flowfield::SetAgentBehavior(ImGui_Agent& a)
 	{
 	case BehaviorTypes::Seek:
 		a.pBehavior = new Seek();
-		//a.pBehavior = new BlendedSteering({ {new Seek(), 1.f}, {new Wander(), 2.f} });
-		break;
-	case BehaviorTypes::Wander:
-		a.pBehavior = new Wander();
-		break;
-	case BehaviorTypes::Flee:
-		a.pBehavior = new Flee();
 		break;
 
-	case BehaviorTypes::Arrive:
-		a.pBehavior = new Arrive();
-		break;
-
-	case BehaviorTypes::Face:
-		a.pBehavior = new Face();
-		autoOrient = false;
-		break;
-	//...
 	}
 
 	UpdateTarget(a);

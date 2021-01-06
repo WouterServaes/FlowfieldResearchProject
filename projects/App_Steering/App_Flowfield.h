@@ -28,18 +28,6 @@ private:
 	enum class BehaviorTypes :int
 	{
 		Seek,
-		Wander,
-		Flee,
-		Arrive,
-		Face,
-		Evade,
-		Pursuit,
-		Hide,
-		AvoidObstacle,
-		Align,
-		FacedArrive,
-		SlowClap,
-
 		//@end
 		Count
 	};
@@ -48,7 +36,7 @@ private:
 	{
 		SteeringAgent* pAgent = nullptr;
 		ISteeringBehavior* pBehavior = nullptr;
-		int SelectedBehavior = int(BehaviorTypes::Wander);
+		int SelectedBehavior = int(BehaviorTypes::Seek);
 		int SelectedTarget = -1;
 	};
 
@@ -69,7 +57,7 @@ private:
 
 	//Interface Functions
 	void RemoveAgent(UINT index);
-	ImGui_Agent App_Flowfield::AddAgent(BehaviorTypes behaviorType = BehaviorTypes::Wander, int targetId = -1, bool autoOrient = true, float mass = 1.f, float maxSpd = 7.f);
+	ImGui_Agent App_Flowfield::AddAgent(BehaviorTypes behaviorType = BehaviorTypes::Seek, int targetId = -1, bool autoOrient = true, float mass = 1.f, float maxSpd = 7.f);
 	void SetAgentBehavior(ImGui_Agent& a);
 	void UpdateTarget(ImGui_Agent& a);
 	void UpdateTargetLabel();
