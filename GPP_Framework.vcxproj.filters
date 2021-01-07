@@ -3,78 +3,234 @@
   <ItemGroup>
     <ClCompile Include="framework\main.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="framework\EliteGeometry\EGeometry2DTypes.cpp" />
-    <ClCompile Include="framework\ElitePhysics\Box2DIntegration\ERigidBodyBox2D.cpp" />
-    <ClCompile Include="framework\ElitePhysics\Box2DIntegration\EPhysicsWorldBox2D.cpp" />
-    <ClCompile Include="projects\Shared\BaseAgent.cpp" />
-    <ClCompile Include="framework\EliteWindow\SDLWindow\SDLWindow.cpp" />
-    <ClCompile Include="framework\EliteTimer\SDLTimer\ETimer_SDL.cpp" />
-    <ClCompile Include="framework\EliteInput\EInputManager.cpp" />
-    <ClCompile Include="framework\EliteRendering\2DCamera\ECamera2D.cpp" />
-    <ClCompile Include="framework\EliteRendering\SDLIntegration\SDLFrame\SDLFrame.cpp" />
-    <ClCompile Include="framework\EliteRendering\SDLIntegration\SDLHelpers\gl3w.c" />
-    <ClCompile Include="framework\EliteRendering\SDLIntegration\SDLDebugRenderer2D\SDLDebugRenderer2D.cpp" />
-    <ClCompile Include="framework\EliteUI\EImmediateUI.cpp" />
-    <ClCompile Include="framework\EliteMath\EMatrix2x3.cpp" />
-    <ClCompile Include="projects\App_Steering\Obstacle.cpp" />
-    <ClCompile Include="projects\App_Steering\SteeringAgent.cpp" />
-    <ClCompile Include="projects\App_Steering\SteeringBehaviors.cpp" />
-    <ClCompile Include="projects\App_Steering\App_Flowfield.cpp" />
+    <ClCompile Include="framework\EliteRendering\2DCamera\ECamera2D.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\EliteGeometry\EGeometry2DTypes.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\EliteUI\EImmediateUI.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\EliteInput\EInputManager.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\EliteMath\EMatrix2x3.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\ElitePhysics\Box2DIntegration\EPhysicsWorldBox2D.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\ElitePhysics\Box2DIntegration\ERigidBodyBox2D.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\EliteTimer\SDLTimer\ETimer_SDL.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\EliteRendering\SDLIntegration\SDLHelpers\gl3w.c">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\EliteRendering\SDLIntegration\SDLDebugRenderer2D\SDLDebugRenderer2D.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\EliteRendering\SDLIntegration\SDLFrame\SDLFrame.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\EliteWindow\SDLWindow\SDLWindow.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="projects\App_Flowfield\App_Flowfield.cpp">
+      <Filter>Flowfield</Filter>
+    </ClCompile>
+    <ClCompile Include="projects\Shared\BaseAgent.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="projects\App_Flowfield\Obstacle.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="projects\App_Flowfield\Grid.cpp">
+      <Filter>Flowfield</Filter>
+    </ClCompile>
+    <ClCompile Include="projects\App_Flowfield\SteeringAgent.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="projects\App_Flowfield\SteeringBehaviors.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowfieldAgent.cpp">
+      <Filter>Flowfield</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="framework\math\CoreDefines.h" />
-    <ClInclude Include="framework\math\EMat22.h" />
-    <ClInclude Include="framework\math\EMath.h" />
-    <ClInclude Include="framework\math\EMathUtilities.h" />
-    <ClInclude Include="framework\math\EVector2.h" />
-    <ClInclude Include="framework\math\EVector3.h" />
-    <ClInclude Include="framework\EliteMath\EMat22.h" />
-    <ClInclude Include="framework\EliteMath\EMath.h" />
-    <ClInclude Include="framework\EliteMath\EMathUtilities.h" />
-    <ClInclude Include="framework\EliteMath\EVector2.h" />
-    <ClInclude Include="framework\EliteMath\EVector3.h" />
-    <ClInclude Include="framework\EliteGeometry\EGeometry2DTypes.h" />
-    <ClInclude Include="framework\EliteGeometry\EGeometry.h" />
-    <ClInclude Include="framework\EliteGeometry\EGeometry2DUtilities.h" />
-    <ClInclude Include="framework\ElitePhysics\ERigidBodyBase.h" />
-    <ClInclude Include="framework\ElitePhysics\EPhysics.h" />
-    <ClInclude Include="framework\ElitePhysics\EPhysicsTypes.h" />
-    <ClInclude Include="framework\ElitePhysics\EPhysicsWorldBase.h" />
-    <ClInclude Include="framework\ElitePhysics\EPhysicsShapes.h" />
-    <ClInclude Include="framework\EliteWindow\EWindowBase.h" />
-    <ClInclude Include="framework\EliteWindow\EWindow.h" />
-    <ClInclude Include="projects\Shared\BaseAgent.h" />
-    <ClInclude Include="framework\EliteWindow\SDLWindow\SDLWindow.h" />
-    <ClInclude Include="framework\EliteInput\EInputManager.h" />
-    <ClInclude Include="framework\EliteTimer\ETimer.h" />
-    <ClInclude Include="framework\EliteInput\EInputCodes.h" />
-    <ClInclude Include="framework\EliteHelpers\ESingleton.h" />
-    <ClInclude Include="framework\EliteRendering\EFrameBase.h" />
-    <ClInclude Include="framework\EliteRendering\ERendering.h" />
-    <ClInclude Include="framework\EliteRendering\ERenderingTypes.h" />
-    <ClInclude Include="framework\EliteRendering\2DCamera\ECamera2D.h" />
-    <ClInclude Include="framework\EliteRendering\SDLIntegration\SDLFrame\SDLFrame.h" />
-    <ClInclude Include="framework\EliteRendering\SDLIntegration\SDLHelpers\gl3w.h" />
-    <ClInclude Include="framework\EliteRendering\SDLIntegration\SDLHelpers\glcorearb.h" />
-    <ClInclude Include="framework\EliteRendering\EDebugRenderer2D.h" />
-    <ClInclude Include="framework\EliteRendering\SDLIntegration\SDLDebugRenderer2D\SDLDebugRenderer2D.h" />
-    <ClInclude Include="framework\EliteInterfaces\EIApp.h" />
-    <ClInclude Include="framework\EliteHelpers\EMemoryPool.h" />
-    <ClInclude Include="framework\EliteHelpers\EMemoryPoolHelpers.h" />
-    <ClInclude Include="framework\ElitePhysics\Box2DIntegration\Box2DRenderer.h" />
-    <ClInclude Include="framework\EliteHelpers\EMulticastDelegate.h" />
-    <ClInclude Include="framework\EliteUI\EImmediateUI.h" />
-    <ClInclude Include="framework\EliteRendering\Shaders.h" />
-    <ClInclude Include="framework\EliteInput\EInputData.h" />
-    <ClInclude Include="framework\EliteMath\EMatrix2x3.h" />
-    <ClInclude Include="projects\App_Steering\Obstacle.h" />
-    <ClInclude Include="projects\App_Steering\SteeringAgent.h" />
-    <ClInclude Include="projects\App_Steering\SteeringBehaviors.h" />
-    <ClInclude Include="projects\App_Steering\SteeringHelpers.h" />
-    <ClInclude Include="projects\App_Steering\App_Flowfield.h" />
+    <ClInclude Include="framework\EliteRendering\2DCamera\ECamera2D.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteRendering\EDebugRenderer2D.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteRendering\EFrameBase.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteGeometry\EGeometry.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteGeometry\EGeometry2DTypes.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteGeometry\EGeometry2DUtilities.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteInterfaces\EIApp.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteUI\EImmediateUI.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteInput\EInputCodes.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteInput\EInputData.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteInput\EInputManager.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteMath\EMat22.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\math\EMat22.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteMath\EMath.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\math\EMath.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\math\EMathUtilities.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteMath\EMathUtilities.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteMath\EMatrix2x3.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteHelpers\EMemoryPool.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteHelpers\EMemoryPoolHelpers.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteHelpers\EMulticastDelegate.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\ElitePhysics\EPhysics.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\ElitePhysics\EPhysicsShapes.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\ElitePhysics\EPhysicsTypes.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\ElitePhysics\EPhysicsWorldBase.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteRendering\ERendering.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteRendering\ERenderingTypes.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\ElitePhysics\ERigidBodyBase.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteHelpers\ESingleton.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteTimer\ETimer.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\math\EVector2.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteMath\EVector2.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteMath\EVector3.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\math\EVector3.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteWindow\EWindow.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteWindow\EWindowBase.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteRendering\SDLIntegration\SDLHelpers\gl3w.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteRendering\SDLIntegration\SDLHelpers\glcorearb.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteWindow\SDLWindow\SDLWindow.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteRendering\SDLIntegration\SDLDebugRenderer2D\SDLDebugRenderer2D.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteRendering\SDLIntegration\SDLFrame\SDLFrame.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\ElitePhysics\Box2DIntegration\Box2DRenderer.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\math\CoreDefines.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="projects\App_Flowfield\App_Flowfield.h">
+      <Filter>Flowfield</Filter>
+    </ClInclude>
+    <ClInclude Include="projects\Shared\BaseAgent.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="projects\App_Flowfield\Grid.h">
+      <Filter>Flowfield</Filter>
+    </ClInclude>
+    <ClInclude Include="projects\App_Flowfield\Obstacle.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\EliteRendering\Shaders.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="projects\App_Flowfield\SteeringAgent.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="projects\App_Flowfield\SteeringBehaviors.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="projects\App_Flowfield\SteeringHelpers.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowfieldAgent.h">
+      <Filter>Flowfield</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="imgui.ini" />
+    <Filter Include="Framework">
+      <UniqueIdentifier>{49026d3d-5f7c-4385-9ad3-78b7b438b9b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Flowfield">
+      <UniqueIdentifier>{5bfbd410-c3a7-4e8d-8ce9-096c66f9934e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="imgui.ini">
+      <Filter>Framework</Filter>
+    </None>
   </ItemGroup>
 </Project>

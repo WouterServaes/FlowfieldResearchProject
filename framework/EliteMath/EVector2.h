@@ -155,6 +155,12 @@ namespace Elite
 		const auto revScale = 1.0f / s;
 		return Vector2(revScale * v.x, revScale * v.y);
 	}
+
+	inline auto operator/ (const Vector2& v, const Vector2& v2)
+	{
+		return Vector2(v.x / v2.x, v.y / v2.y);
+	}
+
 #pragma endregion //GlobalVectorOperators
 
 	//=== Global Vector Functions ===
