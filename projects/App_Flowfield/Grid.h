@@ -3,6 +3,19 @@
 class Grid
 {
 public:
+	enum class SquareType
+	{
+		Default, Obstacle, Goal
+	};
+
+	struct GridSquare
+	{
+		size_t row{}, column{};
+		Elite::Vector2 botLeft{};
+		std::vector<Elite::Vector2> flowDirections{ { 1.f, 0.f } };
+		SquareType squareType{ SquareType::Default };
+	};
+
 	Grid(const Elite::Vector2& worldSize, const Elite::Vector2& gridResolution);
 	~Grid();
 
@@ -12,6 +25,7 @@ public:
 	bool MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr, bool firstMove);
 	bool AgentReachedGoal(const Elite::Vector2& agentPos, int agentGoal);
 	Elite::Vector2 GetValidRandomPos();
+	void MakeFlowfield();
 	//adding to grid
 	void AddObstacle(const Elite::Vector2& obstaclePos);
 	void AddGoal(const Elite::Vector2& goalPos);
@@ -37,18 +51,9 @@ private:
 		return m_pGrid->at(idx).botLeft + (m_SquareSize / 2.f);
 	};
 	size_t GetGridSqrIdxAtPos(const Elite::Vector2& pos) const;
-	enum class SquareType
-	{
-		Default, Obstacle, Goal
-	};
+	
 
-	struct GridSquare
-	{
-		size_t row{}, column{};
-		Elite::Vector2 botLeft{};
-		std::vector<Elite::Vector2> flowDirections{ {1.f, 0.f} };
-		SquareType squareType{SquareType::Default};
-	};
+	
 
 	Elite::Vector2 m_WorldDimensions, m_GridResolution, m_SquareSize;
 	std::vector<GridSquare>* m_pGrid{ nullptr };

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Grid.h"
 
-
+#include "GeneratingFlowField.h"
 
 Grid::Grid(const Elite::Vector2& worldSize, const Elite::Vector2& gridResolution)
 	:m_WorldDimensions{worldSize}, m_GridResolution(gridResolution), m_SquareSize{m_WorldDimensions/m_GridResolution}
@@ -50,7 +50,8 @@ void Grid::Render(float deltaTime) const
 
 void Grid::Update(float deltaTime)
 {
-	
+	if (m_MadeGoalVector)
+		MakeFlowfield();
 }
 
 void Grid::DrawGridSqr(size_t idx, const Elite::Color& color, bool fillSqr) const
@@ -208,4 +209,9 @@ Elite::Vector2 Grid::GetValidRandomPos()
 	} while (m_pGrid->at(randomIdx).squareType!=SquareType::Default);
 
 	return GetMidOfSquare(randomIdx);
+}
+
+void Grid::MakeFlowfield()
+{
+	Algorithms::Dijkstra(m_pGrid, m_GridResolution);
 }

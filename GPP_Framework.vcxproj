@@ -323,6 +323,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="projects\App_Flowfield\GeneratingFlowField.h" />
     <ClInclude Include="projects\App_Flowfield\FlowfieldAgent.h" />
     <ClInclude Include="framework\EliteHelpers\EMulticastDelegate.h" />
     <ClInclude Include="framework\EliteHelpers\EMemoryPool.h" />

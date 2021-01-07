@@ -219,6 +219,9 @@
     <ClInclude Include="projects\App_Flowfield\FlowfieldAgent.h">
       <Filter>Flowfield</Filter>
     </ClInclude>
+    <ClInclude Include="projects\App_Flowfield\GeneratingFlowField.h">
+      <Filter>Flowfield</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Framework">
