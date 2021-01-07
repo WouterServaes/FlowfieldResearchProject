@@ -32,7 +32,8 @@ private:
 
 	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_MadeObstacles{ false }, m_MadeGoals{false};
 	float m_TrimWorldSize{};
-	int m_AmountOfAgent{ 1 };
+	int m_AmountOfAgent{ 5 };
+
 
 };
 #endif

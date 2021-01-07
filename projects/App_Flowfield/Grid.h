@@ -9,8 +9,9 @@ public:
 	void Render(float deltaTime) const;
 	void Update(float deltaTime);
 
-	bool MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr);
+	bool MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr, bool firstMove);
 	bool AgentReachedGoal(const Elite::Vector2& agentPos, int agentGoal);
+	Elite::Vector2 GetValidRandomPos();
 	//adding to grid
 	void AddObstacle(const Elite::Vector2& obstaclePos);
 	void AddGoal(const Elite::Vector2& goalPos);

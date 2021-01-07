@@ -167,9 +167,10 @@ void Grid::MakeGoalVector()
 
 }
 
-bool Grid::MoveSqr(const Elite::Vector2& currentPos,Elite::Vector2& targetPos, int goalNr)
+bool Grid::MoveSqr(const Elite::Vector2& currentPos,Elite::Vector2& targetPos, int goalNr, bool firstMove)
 {
-	if (Elite::Distance(currentPos, targetPos)<= m_MindDistanceFromTarget)
+
+	if (firstMove || Elite::Distance(currentPos, targetPos)<= m_MindDistanceFromTarget)
 	{
 		const auto sqrIdx{ GetGridSqrIdxAtPos(currentPos) }; //sqr index of square the agent is currently in 
 		const auto nextSqrPosFromDirection{currentPos + (m_pGrid->at(sqrIdx).flowDirections[goalNr].GetNormalized() * (m_SquareSize.x + (m_SquareSize.x/2)))}; //a position from the current position of the agent along the direction the agent should be following over a length (1.5 a square's length)	
@@ -194,11 +195,17 @@ int Grid::GetNewGoal(int currentGoal) const
 
 bool Grid::AgentReachedGoal(const Elite::Vector2& agentPos, int agentGoal)
 {
-	if (GetGridSqrIdxAtPos(agentPos) == GetGridSqrIdxAtPos(m_Goals[agentGoal]))
-	{
+	return GetGridSqrIdxAtPos(agentPos) == GetGridSqrIdxAtPos(m_Goals[agentGoal]);
+}
 
-		std::cout << "AAAAAAAAAAAAAAAA";
-		return true;
-	}
-	return false;
+Elite::Vector2 Grid::GetValidRandomPos()
+{
+	int randomIdx{};
+
+	do
+	{
+		randomIdx = Elite::randomInt(m_pGrid->size()-1);
+	} while (m_pGrid->at(randomIdx).squareType!=SquareType::Default);
+
+	return GetMidOfSquare(randomIdx);
 }

@@ -153,21 +153,22 @@ void App_Flowfield::Update(float deltaTime)
 	
 	Elite::Vector2 agentCurrentPos{};
 	int agentCurrentEndGoal{};
+
 	for (auto& a : *m_pAgents)
 	{
+
 		agentCurrentPos = a->GetCurrentPos();
 		agentCurrentEndGoal = a->GetEndGoal();
 
-		bool t{ m_pGrid->AgentReachedGoal(agentCurrentPos, agentCurrentEndGoal) };
-		a->ReachedGoal(t);
-		if (!t);
+		
+		a->SetReachedGoal(m_pGrid->AgentReachedGoal(agentCurrentPos, agentCurrentEndGoal));
+		if (a->GetReachedGoal() == false);
 		{
-			m_pGrid->MoveSqr(agentCurrentPos, a->CurrentTargetPos(), agentCurrentEndGoal);
+			m_pGrid->MoveSqr(agentCurrentPos, a->CurrentTargetPos(), agentCurrentEndGoal, a->GetNeedsInitialMove());
 			a->UpdateAgent(deltaTime);
 		}
-		
-
 	}
+
 }
 
 void App_Flowfield::Render(float deltaTime) const
@@ -194,5 +195,5 @@ void App_Flowfield::Render(float deltaTime) const
 void App_Flowfield::SpawnAgents()
 {
 	for (size_t idx{}; idx < m_AmountOfAgent; ++idx)
-		m_pAgents->push_back(new FlowfieldAgent(Elite::Vector2(0,0)));
+		m_pAgents->push_back(new FlowfieldAgent(m_pGrid->GetValidRandomPos()));
 }

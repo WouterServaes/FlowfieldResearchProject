@@ -16,7 +16,9 @@ public:
 	Elite::Vector2& CurrentTargetPos() { return m_CurrentTargetPos; };
 	void DrawCurrentTarget()const { DEBUGRENDERER2D->DrawPoint(m_CurrentTargetPos, 5.f, { 1, 1, 1 }); };
 
-	void ReachedGoal(bool reachedGoal) { m_ReachedGoal = reachedGoal; };
+	void SetReachedGoal(bool reachedGoal) { m_ReachedGoal = reachedGoal; };
+	bool GetReachedGoal()const { return m_ReachedGoal; };
+	bool GetNeedsInitialMove() const { return true; };
 private:
 	Elite::Color m_AgentColor{ 0.f, 0.f, 0.f };
 
@@ -26,6 +28,6 @@ private:
 	int m_CurrentEndGoalIdx{ 0 };
 	Elite::Vector2 m_CurrentTargetPos{0.f,0.f};
 
-	bool m_ReachedGoal{ false };
+	bool m_ReachedGoal{ false }, m_NeedsInitalMove{ true };
 };
 

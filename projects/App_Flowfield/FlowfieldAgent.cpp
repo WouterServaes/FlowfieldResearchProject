@@ -26,6 +26,7 @@ void FlowfieldAgent::RenderAgent(float deltaTime) const
 
 void FlowfieldAgent::UpdateAgent(float deltaTime)
 {
+	m_NeedsInitalMove = false;
 	if(m_ReachedGoal)
 		m_pAgent->SetLinearVelocity({0,0});
 	
