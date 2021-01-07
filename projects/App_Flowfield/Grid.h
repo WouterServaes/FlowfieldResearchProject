@@ -8,17 +8,57 @@ public:
 
 	void Render(float deltaTime) const;
 	void Update(float deltaTime);
+
+	bool MoveSqr(const Elite::Vector2& currentPos, const Elite::Vector2& endGoalTarget, Elite::Vector2& newPosTarget, int goalNr);
+	//adding to grid
+	void AddObstacle(const Elite::Vector2& obstaclePos);
+	void AddGoal(const Elite::Vector2& goalPos);
+	//goal vector
+	void MakeGoalVector();
+	bool GoalVectorReady() { return m_MadeGoalVector; };
+	//grid drawing
+	void ToggleDrawGrid() { m_DrawGrid = !m_DrawGrid; };
+	void ToggleDrawObstacles() { m_DrawObstacles= !m_DrawObstacles; };
+	void ToggleDrawGoals() { m_DrawGoals= !m_DrawGoals; };
+	void ToggleDrawDirections() { m_DrawDirections = !m_DrawDirections; };
 private:
 	void InitGrid();
+
+	//grid drawing
+	void DrawGridSqr(size_t idx, const Elite::Color& color, bool fillSqr) const;
+	void DrawGrid() const;
+	void DrawDirections() const;
+	void DrawObstacles() const ;
+	void DrawGoals() const;
+	Elite::Vector2 GetMidOfSquare(size_t idx) const { //get the mid position of a square
+		return m_pGrid->at(idx).botLeft + (m_SquareSize / 2.f);
+	};
+	size_t GetGridSqrIdxAtPos(const Elite::Vector2& pos) const;
+	enum class SquareType
+	{
+		Default, Obstacle, Goal
+	};
+
 	struct GridSquare
 	{
 		size_t row{}, column{};
-		std::vector<Elite::Vector2> flowDirections{};
-		bool isObstacle{false};
+		Elite::Vector2 botLeft{};
+		std::vector<Elite::Vector2> flowDirections{ {1.f, 0.5f} };
+		SquareType squareType{SquareType::Default};
 	};
 
 	Elite::Vector2 m_WorldDimensions, m_GridResolution, m_SquareSize;
 	std::vector<GridSquare>* m_pGrid{ nullptr };
+	std::vector<Elite::Vector2> m_Goals{};
 
+
+
+	Elite::Color m_GridColor{ 0.f, 0.f, 1.f },
+		m_DirectionColor{ 0.f, 0.f, 0.f },
+		m_ObstacleColor{1.f, 0.f, 0.f},
+		m_GoalColor{0.f, 1.f, 0.f};
+
+	bool m_DrawGrid{ true }, m_DrawObstacles{ true }, m_DrawGoals{ true }, m_DrawDirections{true},
+		m_MadeGoalVector{ false };
 };
 

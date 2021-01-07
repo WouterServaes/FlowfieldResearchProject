@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------
 #include "framework/EliteInterfaces/EIApp.h"
 #include "FlowfieldAgent.h"
+#include "Grid.h"
 
 class FlowfieldAgent;
 
@@ -24,14 +25,14 @@ public:
 	void Render(float deltaTime) const override;
 
 private:
+	void SpawnAgents();
 
-	std::vector<FlowfieldAgent>* m_pAgents{};
+	std::vector<FlowfieldAgent*>* m_pAgents{};
+	Grid* m_pGrid;
 
-	
-	bool m_VisualizeTarget = true;
-	bool m_TrimWorld = true;
-	float m_TrimWorldSize = 50.f;
-
+	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_MadeObstacles{ false }, m_MadeGoals{false};
+	float m_TrimWorldSize{};
+	int m_AmountOfAgent{ 1 };
 
 };
 #endif

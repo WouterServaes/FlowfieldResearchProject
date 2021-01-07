@@ -4,36 +4,45 @@
 //Includes
 #include "App_Flowfield.h"
 
-
 //Destructor
 App_Flowfield::~App_Flowfield()
 {
-	
+	for (auto& a : *m_pAgents)
+		SAFE_DELETE(a);
+
 	m_pAgents->clear();
 	SAFE_DELETE(m_pAgents);
+
+	SAFE_DELETE(m_pGrid);
 }
-
-
 
 //Functions
 void App_Flowfield::Start()
 {
-	m_pAgents = new std::vector< FlowfieldAgent>();
+	m_TrimWorldSize = 500.f;
 
+	m_pGrid = new Grid(Elite::Vector2(m_TrimWorldSize, m_TrimWorldSize), Elite::Vector2(50.f, 50.f));
+
+	m_pAgents = new std::vector< FlowfieldAgent*>();
+	
 }
 
 void App_Flowfield::Update(float deltaTime)
 {
 	//INPUT
-	if(INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eLeft) && m_VisualizeTarget)
+	if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eLeft))
 	{
 		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eLeft);
-
-		//m_Target.Position = DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) });
-	//for (auto& a : m_AgentVec)
-		//{
-		//	UpdateTarget(a);
-		//}
+		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
+		if (!m_MadeObstacles)
+			m_pGrid->AddObstacle(mousePos);
+	}
+	else if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eMiddle))
+	{
+		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eMiddle);
+		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
+		if (!m_MadeGoals)
+			m_pGrid->AddGoal(mousePos);
 	}
 
 #ifdef PLATFORM_WINDOWS
@@ -78,19 +87,60 @@ void App_Flowfield::Update(float deltaTime)
 		ImGui::Spacing();
 		ImGui::Spacing();
 
-		ImGui::Checkbox("Trim World", &m_TrimWorld);
-		if (m_TrimWorld)
+		// obstacles
+		if (!m_MadeObstacles)
 		{
-			ImGui::SliderFloat("Trim Size", &m_TrimWorldSize, 0.f, 200.f, "%.1");
+			if (ImGui::Button("Obstacles ready"))
+				m_MadeObstacles = true;
 		}
+		else
+			ImGui::Text("Obstacles ready");
+		//----
+
+		//goals
+		if (!m_MadeGoals)
+		{
+			if (ImGui::Button("Goals ready"))
+				m_MadeGoals = true;
+			
+		}
+		else
+			ImGui::Text("Goals ready");
+		//----
+
+		//spawn agents
+		if (!m_SpawnAgents && m_MadeGoals && m_MadeObstacles)
+		{
+			if (!m_pGrid->GoalVectorReady()) 
+				m_pGrid->MakeGoalVector();
+
+			if (ImGui::Button("SpawnAgents"))
+			{
+				m_SpawnAgents = true;
+				SpawnAgents();
+			}
+		}
+		else
+			ImGui::Text("Agents Spawned");
+		//---
+
 		ImGui::Spacing();
-		
+
+		//toggle drawing grid things
+		if (ImGui::Button("Draw grid on/off"))
+			m_pGrid->ToggleDrawGrid();
+		if (ImGui::Button("Draw obstacles on/off"))
+			m_pGrid->ToggleDrawObstacles();
+		if (ImGui::Button("Draw goals on/off"))
+			m_pGrid->ToggleDrawGoals();
+		if (ImGui::Button("Draw direction on/off"))
+			m_pGrid->ToggleDrawDirections();
+
+		ImGui::Spacing();
+
 		ImGui::Spacing();
 		ImGui::Separator();
 
-		
-
-	
 		//End
 		ImGui::PopAllowKeyboardFocus();
 		ImGui::End();
@@ -98,32 +148,38 @@ void App_Flowfield::Update(float deltaTime)
 #pragma endregion
 #endif
 
+	m_pGrid->Update(deltaTime);
+
 	for (auto& a : *m_pAgents)
 	{
-		a.UpdateAgent(deltaTime);
+		a->UpdateAgent(deltaTime);
 	}
 }
 
 void App_Flowfield::Render(float deltaTime) const
 {
+	m_pGrid->Render(deltaTime);
+
 	for (auto& a : *m_pAgents)
 	{
-		a.RenderAgent(deltaTime);
+		a->RenderAgent(deltaTime);
 	}
 
 	if (m_TrimWorld)
 	{
 		vector<Elite::Vector2> points =
 		{
-			{ -m_TrimWorldSize,m_TrimWorldSize },
-			{ m_TrimWorldSize,m_TrimWorldSize },
-			{ m_TrimWorldSize,-m_TrimWorldSize },
-			{-m_TrimWorldSize,-m_TrimWorldSize }
+			{ -m_TrimWorldSize, m_TrimWorldSize },
+			{ m_TrimWorldSize, m_TrimWorldSize },
+			{ m_TrimWorldSize, -m_TrimWorldSize },
+			{ -m_TrimWorldSize, -m_TrimWorldSize }
 		};
-		DEBUGRENDERER2D->DrawPolygon(&points[0], 4, { 1,0,0,1 }, 0.4f);
+		DEBUGRENDERER2D->DrawPolygon(&points[0], 4, { 1, 0, 0, 1 }, 0.4f);
 	}
-
-	
 }
 
-
+void App_Flowfield::SpawnAgents()
+{
+	for (size_t idx{}; idx < m_AmountOfAgent; ++idx)
+		m_pAgents->push_back(new FlowfieldAgent(Elite::Vector2(25, 25)));
+}
