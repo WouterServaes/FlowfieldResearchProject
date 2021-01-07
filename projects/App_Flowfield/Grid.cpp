@@ -162,21 +162,43 @@ void Grid::MakeGoalVector()
 	for (size_t idx{}; idx < m_pGrid->size(); ++idx)
 		if (m_pGrid->at(idx).squareType == SquareType::Goal)
 			m_Goals.push_back(GetMidOfSquare(idx));
+
+
+
 }
 
-bool Grid::MoveSqr(const Elite::Vector2& currentPos, const Elite::Vector2& endGoalTarget,Elite::Vector2& posTarget, int goalNr)
+bool Grid::MoveSqr(const Elite::Vector2& currentPos,Elite::Vector2& targetPos, int goalNr)
 {
-	float minDistFromTarget{ 2.f };
-	if (Elite::Distance(currentPos, posTarget)<= minDistFromTarget)
+	if (Elite::Distance(currentPos, targetPos)<= m_MindDistanceFromTarget)
 	{
 		const auto sqrIdx{ GetGridSqrIdxAtPos(currentPos) }; //sqr index of square the agent is currently in 
-		const auto nextSqrPosFromDirection{currentPos + (m_pGrid->at(sqrIdx).flowDirections[goalNr].GetNormalized() * (m_SquareSize.x + (m_SquareSize.x/2)))}; //a position from the current position of the agent along the direction the agent should be following over a length (1.5 a square's length)
-		
+		const auto nextSqrPosFromDirection{currentPos + (m_pGrid->at(sqrIdx).flowDirections[goalNr].GetNormalized() * (m_SquareSize.x + (m_SquareSize.x/2)))}; //a position from the current position of the agent along the direction the agent should be following over a length (1.5 a square's length)	
 		const auto newSqrIdx{ GetGridSqrIdxAtPos(nextSqrPosFromDirection) }; //the square idx of the square at this new position
-		posTarget =  GetMidOfSquare(newSqrIdx); //next target for the agent = the middle of this new square
+		targetPos =  GetMidOfSquare(newSqrIdx); //next target for the agent = the middle of this new square
 		return true;
 	}
 
 	return false;
 
+}
+
+int Grid::GetNewGoal(int currentGoal) const
+{
+	int newGoalIdx{};
+	do
+	{
+		newGoalIdx = Elite::randomInt(m_Goals.size()-1);
+	} while (newGoalIdx == currentGoal);
+	return newGoalIdx;
+}
+
+bool Grid::AgentReachedGoal(const Elite::Vector2& agentPos, int agentGoal)
+{
+	if (GetGridSqrIdxAtPos(agentPos) == GetGridSqrIdxAtPos(m_Goals[agentGoal]))
+	{
+
+		std::cout << "AAAAAAAAAAAAAAAA";
+		return true;
+	}
+	return false;
 }

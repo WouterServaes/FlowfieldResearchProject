@@ -11,7 +11,7 @@ SteeringOutput Seek::CalculateSteering(float deltaT, SteeringAgent* pAgent)
 {
 	SteeringOutput steering{};
 
-	steering.LinearVelocity = (m_Target).Position - pAgent->GetPosition(); //Desired Velocity
+	steering.LinearVelocity = m_Target - pAgent->GetPosition(); //Desired Velocity
 	steering.LinearVelocity.Normalize(); //Normalize Desired Velocity
 	steering.LinearVelocity *= pAgent->GetMaxLinearSpeed(); //Rescale to Max Speed
 

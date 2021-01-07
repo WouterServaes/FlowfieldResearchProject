@@ -295,7 +295,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FlowfieldAgent.cpp" />
+    <ClCompile Include="projects\App_Flowfield\FlowfieldAgent.cpp" />
     <ClCompile Include="framework\EliteGeometry\EGeometry2DTypes.cpp" />
     <ClCompile Include="framework\EliteInput\EInputManager.cpp" />
     <ClCompile Include="framework\EliteMath\EMatrix2x3.cpp" />
@@ -323,7 +323,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FlowfieldAgent.h" />
+    <ClInclude Include="projects\App_Flowfield\FlowfieldAgent.h" />
     <ClInclude Include="framework\EliteHelpers\EMulticastDelegate.h" />
     <ClInclude Include="framework\EliteHelpers\EMemoryPool.h" />
     <ClInclude Include="framework\EliteHelpers\EMemoryPoolHelpers.h" />

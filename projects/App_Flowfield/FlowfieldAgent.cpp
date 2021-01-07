@@ -21,15 +21,14 @@ FlowfieldAgent::~FlowfieldAgent()
 void FlowfieldAgent::RenderAgent(float deltaTime) const
 {
 	m_pAgent->Render(deltaTime);
+	DrawCurrentTarget();
 }
 
 void FlowfieldAgent::UpdateAgent(float deltaTime)
 {
-	m_pAgent->Update(deltaTime);
+	if(m_ReachedGoal)
+		m_pAgent->SetLinearVelocity({0,0});
 	
-}
-
-void FlowfieldAgent::NewEndGoalTarget(const Elite::Vector2& worldDimensions)
-{
-
+	m_pAgent->GetSteeringBehavior()->SetTarget(m_CurrentTargetPos);
+	m_pAgent->Update(deltaTime);
 }

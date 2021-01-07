@@ -57,7 +57,7 @@
     <ClCompile Include="projects\App_Flowfield\SteeringBehaviors.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="FlowfieldAgent.cpp">
+    <ClCompile Include="projects\App_Flowfield\FlowfieldAgent.cpp">
       <Filter>Flowfield</Filter>
     </ClCompile>
   </ItemGroup>
@@ -216,7 +216,7 @@
     <ClInclude Include="projects\App_Flowfield\SteeringHelpers.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="FlowfieldAgent.h">
+    <ClInclude Include="projects\App_Flowfield\FlowfieldAgent.h">
       <Filter>Flowfield</Filter>
     </ClInclude>
   </ItemGroup>

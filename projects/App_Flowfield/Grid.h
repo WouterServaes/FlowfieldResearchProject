@@ -9,13 +9,15 @@ public:
 	void Render(float deltaTime) const;
 	void Update(float deltaTime);
 
-	bool MoveSqr(const Elite::Vector2& currentPos, const Elite::Vector2& endGoalTarget, Elite::Vector2& newPosTarget, int goalNr);
+	bool MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr);
+	bool AgentReachedGoal(const Elite::Vector2& agentPos, int agentGoal);
 	//adding to grid
 	void AddObstacle(const Elite::Vector2& obstaclePos);
 	void AddGoal(const Elite::Vector2& goalPos);
 	//goal vector
 	void MakeGoalVector();
 	bool GoalVectorReady() { return m_MadeGoalVector; };
+	int GetNewGoal(int currentGoal) const;
 	//grid drawing
 	void ToggleDrawGrid() { m_DrawGrid = !m_DrawGrid; };
 	void ToggleDrawObstacles() { m_DrawObstacles= !m_DrawObstacles; };
@@ -43,7 +45,7 @@ private:
 	{
 		size_t row{}, column{};
 		Elite::Vector2 botLeft{};
-		std::vector<Elite::Vector2> flowDirections{ {1.f, 0.5f} };
+		std::vector<Elite::Vector2> flowDirections{ {1.f, 0.f} };
 		SquareType squareType{SquareType::Default};
 	};
 
@@ -51,7 +53,7 @@ private:
 	std::vector<GridSquare>* m_pGrid{ nullptr };
 	std::vector<Elite::Vector2> m_Goals{};
 
-
+	float m_MindDistanceFromTarget{ 2.f };
 
 	Elite::Color m_GridColor{ 0.f, 0.f, 1.f },
 		m_DirectionColor{ 0.f, 0.f, 0.f },
