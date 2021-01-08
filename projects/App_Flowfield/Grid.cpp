@@ -50,8 +50,11 @@ void Grid::Render(float deltaTime) const
 
 void Grid::Update(float deltaTime)
 {
-	if (m_MadeGoalVector)
+	if (m_MadeGoalVector && !madeFlowFields)
+	{
+		madeFlowFields = true;
 		MakeFlowfield();
+	}
 }
 
 void Grid::DrawGridSqr(size_t idx, const Elite::Color& color, bool fillSqr) const
@@ -214,4 +217,5 @@ Elite::Vector2 Grid::GetValidRandomPos()
 void Grid::MakeFlowfield()
 {
 	Algorithms::Dijkstra(m_pGrid, m_GridResolution);
+	
 }

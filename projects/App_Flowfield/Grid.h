@@ -67,6 +67,6 @@ private:
 		m_GoalColor{0.f, 1.f, 0.f};
 
 	bool m_DrawGrid{ true }, m_DrawObstacles{ true }, m_DrawGoals{ true }, m_DrawDirections{true},
-		m_MadeGoalVector{ false };
+		m_MadeGoalVector{ false }, madeFlowFields{ false };
 };
 
