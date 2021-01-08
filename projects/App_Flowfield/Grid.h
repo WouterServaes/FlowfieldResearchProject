@@ -12,7 +12,7 @@ public:
 	{
 		size_t row{}, column{};
 		Elite::Vector2 botLeft{};
-		std::vector<Elite::Vector2> flowDirections{ { 0, 0 } };
+		std::vector<Elite::Vector2> flowDirections{ }; //this
 		SquareType squareType{ SquareType::Default };
 	};
 

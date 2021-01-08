@@ -46,15 +46,6 @@ void Grid::Render(float deltaTime) const
 	if (m_DrawObstacles) DrawObstacles();
 	if (m_DrawGoals) DrawGoals();
 	if (m_DrawDirections)DrawDirections();
-
-
-	if (Algorithms::dijkstraGrid.size() > 0)
-	{
-		for (size_t idx{}; idx < m_pGrid->size(); ++idx)
-		{
-			DEBUGRENDERER2D->DrawString(m_pGrid->at(idx).botLeft + Elite::Vector2{5.f, 5.f}, std::to_string(Algorithms::dijkstraGrid[idx]).c_str());
-		}
-	}
 }
 
 void Grid::Update(float deltaTime)
@@ -94,16 +85,18 @@ void Grid::DrawGrid() const
 void Grid::DrawDirections() const 
 {
 	size_t directionNr{ 0 };
+
 	float arrowLength{ 2.f };
 
-	for (size_t idx{}; idx < m_pGrid->size(); ++idx)
-	{
-		if (m_pGrid->at(idx).squareType != SquareType::Default) 
-			continue;
-		DEBUGRENDERER2D->DrawDirection(GetMidOfSquare(idx), m_pGrid->at(idx).flowDirections[directionNr].GetNormalized(), arrowLength, m_DirectionColor);
-		DEBUGRENDERER2D->DrawPoint(GetMidOfSquare(idx), 2.f, { 0, 0, 0 });
+	if(m_pGrid->at(0).flowDirections.size()>0)
+		for (size_t idx{}; idx < m_pGrid->size(); ++idx)
+		{
+			if (m_pGrid->at(idx).squareType != SquareType::Default) 
+				continue;
+			DEBUGRENDERER2D->DrawDirection(GetMidOfSquare(idx), m_pGrid->at(idx).flowDirections[directionNr].GetNormalized(), arrowLength, m_DirectionColor);
+			DEBUGRENDERER2D->DrawPoint(GetMidOfSquare(idx), 2.f, { 0, 0, 0 });
 
-	}
+		}
 }
 
 void Grid::DrawObstacles() const 
@@ -174,10 +167,15 @@ void Grid::MakeGoalVector()
 	m_MadeGoalVector = true;
 	for (size_t idx{}; idx < m_pGrid->size(); ++idx)
 		if (m_pGrid->at(idx).squareType == SquareType::Goal)
+		{
+			for (size_t idx2{}; idx2 < m_pGrid->size(); ++idx2)
+			{
+				m_pGrid->at(idx2).flowDirections.push_back({ 0, 0 });
+			}
 			m_Goals.push_back(GetMidOfSquare(idx));
+		}
 
-
-
+	
 }
 
 bool Grid::MoveSqr(const Elite::Vector2& currentPos,Elite::Vector2& targetPos, int goalNr, bool firstMove)
@@ -225,6 +223,26 @@ Elite::Vector2 Grid::GetValidRandomPos()
 
 void Grid::MakeFlowfield()
 {
-	Algorithms::Dijkstra(m_pGrid, m_GridResolution);
+	const std::vector<Elite::Vector2> flowfieldFlowDirections = {
+	{ 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 },{ 0, -1 }, {1,-1} }; //every square around a square
+
+	//finding a goals
+	std::vector<size_t> goalIndxs{};
+	for (const auto& gridSqr : *m_pGrid)
+	{
+		if (gridSqr.squareType == Grid::SquareType::Goal)
+			goalIndxs.push_back(gridSqr.column + (gridSqr.row * m_GridResolution.x));
+	}
+
+	Algorithms::Dijkstra* dijkstraAlgorithm = new Algorithms::Dijkstra(&m_GridResolution);
+
+	//for every goal: run algorithm and make flowfield;
+	for (size_t idx{}; idx < goalIndxs.size(); ++idx)
+	{
+		dijkstraAlgorithm->RunAlgorithm(idx, goalIndxs[idx], m_pGrid);
+		dijkstraAlgorithm->MakeFlowfield(idx, m_pGrid, flowfieldFlowDirections);
+	}
+
+	delete dijkstraAlgorithm;
 	
 }
