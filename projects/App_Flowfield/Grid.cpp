@@ -46,6 +46,15 @@ void Grid::Render(float deltaTime) const
 	if (m_DrawObstacles) DrawObstacles();
 	if (m_DrawGoals) DrawGoals();
 	if (m_DrawDirections)DrawDirections();
+
+
+	if (Algorithms::dijkstraGrid.size() > 0)
+	{
+		for (size_t idx{}; idx < m_pGrid->size(); ++idx)
+		{
+			DEBUGRENDERER2D->DrawString(m_pGrid->at(idx).botLeft + Elite::Vector2{5.f, 5.f}, std::to_string(Algorithms::dijkstraGrid[idx]).c_str());
+		}
+	}
 }
 
 void Grid::Update(float deltaTime)
@@ -91,7 +100,7 @@ void Grid::DrawDirections() const
 	{
 		if (m_pGrid->at(idx).squareType != SquareType::Default) 
 			continue;
-		DEBUGRENDERER2D->DrawDirection(GetMidOfSquare(idx), m_pGrid->at(idx).flowDirections[directionNr], arrowLength, m_DirectionColor);
+		DEBUGRENDERER2D->DrawDirection(GetMidOfSquare(idx), m_pGrid->at(idx).flowDirections[directionNr].GetNormalized(), arrowLength, m_DirectionColor);
 		DEBUGRENDERER2D->DrawPoint(GetMidOfSquare(idx), 2.f, { 0, 0, 0 });
 
 	}
