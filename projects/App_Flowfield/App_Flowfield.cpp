@@ -29,25 +29,45 @@ void App_Flowfield::Start()
 
 void App_Flowfield::Update(float deltaTime)
 {
-	//INPUT
+	HandleMouseInput();
+	
+	m_pGrid->Update(deltaTime);
+	HandleAgentUpdate(deltaTime);
 
-	if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eLeft))
+	HandleImGui();	
+}
+
+void App_Flowfield::Render(float deltaTime) const
+{
+	m_pGrid->SetFlowfieldToDraw(m_FlowfieldToDraw);
+	m_pGrid->Render(deltaTime);
+
+	for (auto& a : *m_pAgents)
 	{
-		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eLeft);
-		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
-		if (m_pGrid->IsPointInGrid(mousePos))
-			if (!m_MadeObstacles)
-				m_pGrid->AddObstacle(mousePos);
-	}
-	else if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eMiddle))
-	{
-		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eMiddle);
-		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
-		if (m_pGrid->IsPointInGrid(mousePos))
-			if (!m_MadeGoals)
-				m_pGrid->AddGoal(mousePos);
+		a->RenderAgent(deltaTime, m_FlowfieldToDraw);
 	}
 
+	if (m_TrimWorld)
+	{
+		vector<Elite::Vector2> points =
+		{
+			{ -m_TrimWorldSize, m_TrimWorldSize },
+			{ m_TrimWorldSize, m_TrimWorldSize },
+			{ m_TrimWorldSize, -m_TrimWorldSize },
+			{ -m_TrimWorldSize, -m_TrimWorldSize }
+		};
+		DEBUGRENDERER2D->DrawPolygon(&points[0], 4, { 1, 0, 0, 1 }, 0.4f);
+	}
+}
+
+void App_Flowfield::SpawnAgents()
+{
+	for (size_t idx{}; idx < m_AmountOfAgent; ++idx)
+		m_pAgents->push_back(new FlowfieldAgent(m_pGrid->GetValidRandomPos()));
+}
+
+void App_Flowfield::HandleImGui()
+{
 #ifdef PLATFORM_WINDOWS
 #pragma region UI
 	//UI
@@ -59,7 +79,7 @@ void App_Flowfield::Update(float deltaTime)
 		bool windowActive = true;
 		ImGui::SetNextWindowPos(ImVec2((float)width - menuWidth - 10, 10));
 		ImGui::SetNextWindowSize(ImVec2((float)menuWidth, (float)height - 20));
-		ImGui::Begin("Gameplay Programming", &windowActive, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+		ImGui::Begin("Gameplay Programming", &windowActive,  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_NoMove);
 		ImGui::PushAllowKeyboardFocus(false);
 
 		//Elements
@@ -105,7 +125,7 @@ void App_Flowfield::Update(float deltaTime)
 		{
 			if (ImGui::Button("Goals ready"))
 				m_MadeGoals = true;
-			
+
 		}
 		else
 			ImGui::Text("Goals ready");
@@ -114,7 +134,7 @@ void App_Flowfield::Update(float deltaTime)
 		//spawn agents
 		if (!m_SpawnAgents && m_MadeGoals && m_MadeObstacles)
 		{
-			if (!m_pGrid->GoalVectorReady()) 
+			if (!m_pGrid->GoalVectorReady())
 				m_pGrid->MakeGoalVector();
 
 			if (ImGui::Button("SpawnAgents"))
@@ -124,7 +144,7 @@ void App_Flowfield::Update(float deltaTime)
 			}
 		}
 
-		if(m_SpawnAgents)
+		if (m_SpawnAgents)
 			ImGui::Text("Agents Spawned");
 		//---
 
@@ -141,11 +161,11 @@ void App_Flowfield::Update(float deltaTime)
 		if (ImGui::Button("Draw flowfield on/off"))
 			m_pGrid->ToggleDrawDirections();
 
-		if(m_pGrid->FlowfieldDrawn())
-			ImGui::SliderInt("flowfield to draw", &m_FlowfieldToDraw, 0, m_pGrid->GetAmountOfFlowfields() -1);
-		
-		
-		
+		if (m_pGrid->FlowfieldDrawn())
+			ImGui::SliderInt("flowfield to draw", &m_FlowfieldToDraw, 0, m_pGrid->GetAmountOfFlowfields() - 1);
+
+
+
 		ImGui::Spacing();
 
 		ImGui::Spacing();
@@ -157,13 +177,30 @@ void App_Flowfield::Update(float deltaTime)
 	}
 #pragma endregion
 #endif
+}
 
-	m_pGrid->Update(deltaTime);
+void App_Flowfield::HandleMouseInput()
+{
+	if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eLeft))
+	{
+		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eLeft);
+		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
+		if (m_pGrid->IsPointInGrid(mousePos))
+			if (!m_MadeObstacles)
+				m_pGrid->AddObstacle(mousePos);
+	}
+	else if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eMiddle))
+	{
+		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eMiddle);
+		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
+		if (m_pGrid->IsPointInGrid(mousePos))
+			if (!m_MadeGoals)
+				m_pGrid->AddGoal(mousePos);
+	}
+}
 
-
-
-
-
+void App_Flowfield::HandleAgentUpdate(float deltaTime)
+{
 
 	Elite::Vector2 agentCurrentPos{};
 	int agentCurrentEndGoal{};
@@ -173,7 +210,7 @@ void App_Flowfield::Update(float deltaTime)
 	for (auto& a : *m_pAgents)
 	{
 		agentCurrentPos = a->GetCurrentPos();
-		agentCurrentEndGoal = a->GetEndGoal();	
+		agentCurrentEndGoal = a->GetEndGoal();
 		a->SetReachedGoal(m_pGrid->AgentReachedGoal(agentCurrentPos, agentCurrentEndGoal));
 
 		if (a->GetReachedGoal() == false);
@@ -182,7 +219,7 @@ void App_Flowfield::Update(float deltaTime)
 			a->UpdateAgent(deltaTime);
 		}
 
-		if(a->IsMarkedForRemove())
+		if (a->IsMarkedForRemove())
 			agentsToRemove++;
 	}
 
@@ -198,36 +235,4 @@ void App_Flowfield::Update(float deltaTime)
 				return false;
 			}));
 	}
-	
-
-	
-}
-
-void App_Flowfield::Render(float deltaTime) const
-{
-	m_pGrid->SetFlowfieldToDraw(m_FlowfieldToDraw);
-	m_pGrid->Render(deltaTime);
-
-	for (auto& a : *m_pAgents)
-	{
-		a->RenderAgent(deltaTime, m_FlowfieldToDraw);
-	}
-
-	if (m_TrimWorld)
-	{
-		vector<Elite::Vector2> points =
-		{
-			{ -m_TrimWorldSize, m_TrimWorldSize },
-			{ m_TrimWorldSize, m_TrimWorldSize },
-			{ m_TrimWorldSize, -m_TrimWorldSize },
-			{ -m_TrimWorldSize, -m_TrimWorldSize }
-		};
-		DEBUGRENDERER2D->DrawPolygon(&points[0], 4, { 1, 0, 0, 1 }, 0.4f);
-	}
-}
-
-void App_Flowfield::SpawnAgents()
-{
-	for (size_t idx{}; idx < m_AmountOfAgent; ++idx)
-		m_pAgents->push_back(new FlowfieldAgent(m_pGrid->GetValidRandomPos()));
 }

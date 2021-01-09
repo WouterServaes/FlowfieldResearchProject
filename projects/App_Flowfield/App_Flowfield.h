@@ -18,7 +18,7 @@ public:
 	//Constructor & Destructor
 	App_Flowfield() = default;
 	virtual ~App_Flowfield();
-
+	
 	//App Functions
 	void Start() override;
 	void Update(float deltaTime) override;
@@ -26,7 +26,9 @@ public:
 
 private:
 	void SpawnAgents();
-
+	void HandleImGui();
+	void HandleMouseInput();
+	void HandleAgentUpdate(float deltaTime);
 	std::vector<FlowfieldAgent*>* m_pAgents{};
 	Grid* m_pGrid;
 
