@@ -45,7 +45,7 @@ void Grid::Render(float deltaTime) const
 	if(m_DrawGrid) DrawGrid();
 	if (m_DrawObstacles) DrawObstacles();
 	if (m_DrawGoals) DrawGoals();
-	if (m_DrawDirections)DrawDirections();
+	if (m_DrawDirections)DrawFlowfield();
 }
 
 void Grid::Update(float deltaTime)
@@ -82,10 +82,8 @@ void Grid::DrawGrid() const
 	}
 }
 
-void Grid::DrawDirections() const 
+void Grid::DrawFlowfield() const 
 {
-	size_t directionNr{ 0 };
-
 	float arrowLength{ 2.f };
 
 	if(m_pGrid->at(0).flowDirections.size()>0)
@@ -93,10 +91,21 @@ void Grid::DrawDirections() const
 		{
 			if (m_pGrid->at(idx).squareType != SquareType::Default) 
 				continue;
-			DEBUGRENDERER2D->DrawDirection(GetMidOfSquare(idx), m_pGrid->at(idx).flowDirections[directionNr].GetNormalized(), arrowLength, m_DirectionColor);
+			DEBUGRENDERER2D->DrawDirection(GetMidOfSquare(idx), m_pGrid->at(idx).flowDirections[m_FlowfieldToDraw].GetNormalized(), arrowLength, m_DirectionColor);
 			DEBUGRENDERER2D->DrawPoint(GetMidOfSquare(idx), 2.f, { 0, 0, 0 });
 
 		}
+}
+
+
+bool Grid::SetFlowfieldToDraw(size_t flowfieldNr)
+{
+	if (flowfieldNr <= m_Goals.size())
+	{
+		m_FlowfieldToDraw = flowfieldNr;
+		return true;
+	}
+	return false;
 }
 
 void Grid::DrawObstacles() const 
@@ -110,10 +119,17 @@ void Grid::DrawObstacles() const
 
 void Grid::DrawGoals() const
 {
+	size_t flowfieldNr{};
 	for (size_t idx{}; idx < m_pGrid->size(); ++idx)
 	{
 		if (m_pGrid->at(idx).squareType != SquareType::Goal) continue;
-		DrawGridSqr(idx, m_GoalColor, true);
+
+		auto color = m_GoalColor;
+		if (flowfieldNr == m_FlowfieldToDraw)
+			color = m_HighlitedGoalColor;
+
+		flowfieldNr +=1;
+		DrawGridSqr(idx, color, true);
 	}
 }
 
@@ -206,7 +222,7 @@ int Grid::GetNewGoal(int currentGoal) const
 
 bool Grid::AgentReachedGoal(const Elite::Vector2& agentPos, int agentGoal)
 {
-	return GetGridSqrIdxAtPos(agentPos) == GetGridSqrIdxAtPos(m_Goals[agentGoal]);
+	return Elite::Distance(agentPos, m_Goals[agentGoal]) <= m_SquareSize.x / 2.f;
 }
 
 Elite::Vector2 Grid::GetValidRandomPos()
@@ -219,6 +235,14 @@ Elite::Vector2 Grid::GetValidRandomPos()
 	} while (m_pGrid->at(randomIdx).squareType!=SquareType::Default);
 
 	return GetMidOfSquare(randomIdx);
+}
+
+bool Grid::IsPointInGrid(const Elite::Vector2& point)
+{
+	return (point.x > -(m_WorldDimensions.x / 2.f) &&
+		point.x < m_WorldDimensions.x / 2.f &&
+		point.y > -(m_WorldDimensions.y / 2.f) &&
+		point.y < m_WorldDimensions.y / 2.f);
 }
 
 void Grid::MakeFlowfield()

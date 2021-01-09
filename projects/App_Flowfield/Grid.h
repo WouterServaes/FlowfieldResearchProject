@@ -12,7 +12,7 @@ public:
 	{
 		size_t row{}, column{};
 		Elite::Vector2 botLeft{};
-		std::vector<Elite::Vector2> flowDirections{ }; //this
+		std::vector<Elite::Vector2> flowDirections{ };
 		SquareType squareType{ SquareType::Default };
 	};
 
@@ -26,6 +26,7 @@ public:
 	bool AgentReachedGoal(const Elite::Vector2& agentPos, int agentGoal);
 	Elite::Vector2 GetValidRandomPos();
 	void MakeFlowfield();
+	bool IsPointInGrid(const Elite::Vector2& point);
 	//adding to grid
 	void AddObstacle(const Elite::Vector2& obstaclePos);
 	void AddGoal(const Elite::Vector2& goalPos);
@@ -38,18 +39,27 @@ public:
 	void ToggleDrawObstacles() { m_DrawObstacles= !m_DrawObstacles; };
 	void ToggleDrawGoals() { m_DrawGoals= !m_DrawGoals; };
 	void ToggleDrawDirections() { m_DrawDirections = !m_DrawDirections; };
+
+	size_t GetAmountOfFlowfields()const { return m_Goals.size(); };
+	bool SetFlowfieldToDraw(size_t flowfieldNr);
+	bool FlowfieldDrawn()const { return m_DrawDirections; };
 private:
 	void InitGrid();
 
 	//grid drawing
 	void DrawGridSqr(size_t idx, const Elite::Color& color, bool fillSqr) const;
 	void DrawGrid() const;
-	void DrawDirections() const;
+	void DrawFlowfield() const;
+	size_t m_FlowfieldToDraw{ 0 };
+
 	void DrawObstacles() const ;
 	void DrawGoals() const;
+	
+
 	Elite::Vector2 GetMidOfSquare(size_t idx) const { //get the mid position of a square
 		return m_pGrid->at(idx).botLeft + (m_SquareSize / 2.f);
 	};
+
 	size_t GetGridSqrIdxAtPos(const Elite::Vector2& pos) const;
 	
 
@@ -64,9 +74,10 @@ private:
 	Elite::Color m_GridColor{ 0.f, 0.f, 1.f },
 		m_DirectionColor{ 0.f, 0.f, 0.f },
 		m_ObstacleColor{1.f, 0.f, 0.f},
-		m_GoalColor{0.f, 1.f, 0.f};
+		m_GoalColor{0.f, 1.f, 0.f},
+		m_HighlitedGoalColor{.5f, .5f, 0.f};
 
-	bool m_DrawGrid{ true }, m_DrawObstacles{ true }, m_DrawGoals{ true }, m_DrawDirections{true},
+	bool m_DrawGrid{ true }, m_DrawObstacles{ true }, m_DrawGoals{ true }, m_DrawDirections{false},
 		m_MadeGoalVector{ false }, madeFlowFields{ false };
 };
 

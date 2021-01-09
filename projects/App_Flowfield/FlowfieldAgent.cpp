@@ -9,7 +9,7 @@ FlowfieldAgent::FlowfieldAgent(const Elite::Vector2& spawnPos )
 
 	m_pAgent->SetSteeringBehavior(m_pBehavior);
 	m_pAgent->SetPosition(spawnPos);
-	m_pAgent->SetBodyColor(m_AgentColor);
+	m_pAgent->SetBodyColor(m_AgentDefaultColor);
 }
 
 FlowfieldAgent::~FlowfieldAgent()
@@ -18,14 +18,29 @@ FlowfieldAgent::~FlowfieldAgent()
 	SAFE_DELETE(m_pBehavior);
 }
 
-void FlowfieldAgent::RenderAgent(float deltaTime) const
+void FlowfieldAgent::RenderAgent(float deltaTime, int activeFlowfield) const
 {
+	if (m_CurrentEndGoalIdx == activeFlowfield)
+		m_pAgent->SetBodyColor(m_AgentHightlightColor);
+	else
+		m_pAgent->SetBodyColor(m_AgentDefaultColor);
 	m_pAgent->Render(deltaTime);
 	DrawCurrentTarget();
 }
 
 void FlowfieldAgent::UpdateAgent(float deltaTime)
 {
+
+	if (m_ReachedGoal)
+	{
+		if (m_DeleteElapsedSec < m_DeleteTime)
+			m_DeleteElapsedSec += deltaTime;
+		else
+			m_MarkForRemove = true;
+		
+
+	}
+
 	m_NeedsInitalMove = false;
 	if(m_ReachedGoal)
 		m_pAgent->SetLinearVelocity({0,0});

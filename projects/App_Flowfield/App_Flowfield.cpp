@@ -30,19 +30,22 @@ void App_Flowfield::Start()
 void App_Flowfield::Update(float deltaTime)
 {
 	//INPUT
+
 	if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eLeft))
 	{
 		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eLeft);
 		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
-		if (!m_MadeObstacles)
-			m_pGrid->AddObstacle(mousePos);
+		if (m_pGrid->IsPointInGrid(mousePos))
+			if (!m_MadeObstacles)
+				m_pGrid->AddObstacle(mousePos);
 	}
 	else if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eMiddle))
 	{
 		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eMiddle);
 		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
-		if (!m_MadeGoals)
-			m_pGrid->AddGoal(mousePos);
+		if (m_pGrid->IsPointInGrid(mousePos))
+			if (!m_MadeGoals)
+				m_pGrid->AddGoal(mousePos);
 	}
 
 #ifdef PLATFORM_WINDOWS
@@ -120,12 +123,14 @@ void App_Flowfield::Update(float deltaTime)
 				SpawnAgents();
 			}
 		}
-		else
+
+		if(m_SpawnAgents)
 			ImGui::Text("Agents Spawned");
 		//---
 
 		ImGui::Spacing();
-
+		ImGui::Separator();
+		ImGui::Spacing();
 		//toggle drawing grid things
 		if (ImGui::Button("Draw grid on/off"))
 			m_pGrid->ToggleDrawGrid();
@@ -133,9 +138,14 @@ void App_Flowfield::Update(float deltaTime)
 			m_pGrid->ToggleDrawObstacles();
 		if (ImGui::Button("Draw goals on/off"))
 			m_pGrid->ToggleDrawGoals();
-		if (ImGui::Button("Draw direction on/off"))
+		if (ImGui::Button("Draw flowfield on/off"))
 			m_pGrid->ToggleDrawDirections();
 
+		if(m_pGrid->FlowfieldDrawn())
+			ImGui::SliderInt("flowfield to draw", &m_FlowfieldToDraw, 0, m_pGrid->GetAmountOfFlowfields() -1);
+		
+		
+		
 		ImGui::Spacing();
 
 		ImGui::Spacing();
@@ -150,33 +160,57 @@ void App_Flowfield::Update(float deltaTime)
 
 	m_pGrid->Update(deltaTime);
 
-	
+
+
+
+
+
 	Elite::Vector2 agentCurrentPos{};
 	int agentCurrentEndGoal{};
 
+
+	int agentsToRemove{};
 	for (auto& a : *m_pAgents)
 	{
-
 		agentCurrentPos = a->GetCurrentPos();
-		agentCurrentEndGoal = a->GetEndGoal();
-
-		
+		agentCurrentEndGoal = a->GetEndGoal();	
 		a->SetReachedGoal(m_pGrid->AgentReachedGoal(agentCurrentPos, agentCurrentEndGoal));
+
 		if (a->GetReachedGoal() == false);
 		{
 			m_pGrid->MoveSqr(agentCurrentPos, a->CurrentTargetPos(), agentCurrentEndGoal, a->GetNeedsInitialMove());
 			a->UpdateAgent(deltaTime);
 		}
+
+		if(a->IsMarkedForRemove())
+			agentsToRemove++;
 	}
 
+	for (int idx{}; idx < agentsToRemove; ++idx)
+	{
+		m_pAgents->erase(std::remove_if(m_pAgents->begin(), m_pAgents->end(), [](FlowfieldAgent* agent)
+			{
+				if (agent->IsMarkedForRemove())
+				{
+					delete agent;
+					return true;
+				}
+				return false;
+			}));
+	}
+	
+
+	
 }
 
 void App_Flowfield::Render(float deltaTime) const
 {
+	m_pGrid->SetFlowfieldToDraw(m_FlowfieldToDraw);
 	m_pGrid->Render(deltaTime);
+
 	for (auto& a : *m_pAgents)
 	{
-		a->RenderAgent(deltaTime);
+		a->RenderAgent(deltaTime, m_FlowfieldToDraw);
 	}
 
 	if (m_TrimWorld)
