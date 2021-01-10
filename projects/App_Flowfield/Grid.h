@@ -39,12 +39,15 @@ public:
 	void MakeGoalVector();
 	bool GoalVectorReady() { return m_MadeGoalVector; };
 	int GetNewGoal(int currentGoal) const;
+
+	//spawners
+	std::vector<Elite::Vector2> GetSpawnerPos() const;
 	//grid drawing
 	void ToggleDrawGrid() { m_DrawGrid = !m_DrawGrid; };
 	void ToggleDrawObstacles() { m_DrawObstacles= !m_DrawObstacles; };
 	void ToggleDrawGoals() { m_DrawGoals= !m_DrawGoals; };
 	void ToggleDrawDirections() { m_DrawDirections = !m_DrawDirections; };
-
+	void ToggleDrawSpawners() { m_DrawSpawners = !m_DrawSpawners; };
 	size_t GetAmountOfFlowfields()const { return m_Goals.size(); };
 	bool SetFlowfieldToDraw(size_t flowfieldNr);
 	bool FlowfieldDrawn()const { return m_DrawDirections; };
@@ -87,9 +90,9 @@ private:
 		m_ObstacleColor{1.f, 0.f, 0.f},
 		m_GoalColor{0.f, 1.f, 0.f},
 		m_HighlitedGoalColor{ m_DirectionColor },
-		m_SpawnerColor{1.f, 1.f, 0.f};
+		m_SpawnerColor{0.f, 1.f, 1.f};
 
-	bool m_DrawGrid{ true }, m_DrawObstacles{ true }, m_DrawGoals{ true }, m_DrawDirections{false},
+	bool m_DrawGrid{ true }, m_DrawObstacles{ true }, m_DrawGoals{ true }, m_DrawDirections{ false }, m_DrawSpawners{true},
 		m_MadeGoalVector{ false }, madeFlowFields{ false };
 
 	int m_AddedGoalsAmount{};

@@ -28,6 +28,9 @@ void App_Flowfield::Start()
 
 void App_Flowfield::Update(float deltaTime)
 {
+	if (m_SpawnAgents && m_UseSpawners)
+		UseSpawners(deltaTime);
+
 	HandleKeyboardInput();
 	HandleMouseInput();
 	if (!m_MadeGoals)
@@ -64,6 +67,7 @@ void App_Flowfield::Render(float deltaTime) const
 
 void App_Flowfield::SpawnAgents()
 {
+	if (m_UseSpawners) return;;
 	for (size_t idx{}; idx < m_AmountOfAgent; ++idx)
 		m_pAgents->push_back(new FlowfieldAgent(m_pGrid->GetValidRandomPos()));
 }
@@ -171,6 +175,7 @@ void App_Flowfield::HandleImGui()
 
 			if (ImGui::Button("SpawnAgents"))
 			{
+				AddSpawners();
 				m_SpawnAgents = true;
 				SpawnAgents();
 			}
@@ -190,6 +195,8 @@ void App_Flowfield::HandleImGui()
 			m_pGrid->ToggleDrawObstacles();
 		if (ImGui::Button("Draw goals on/off"))
 			m_pGrid->ToggleDrawGoals();
+		if (ImGui::Button("Draw spawners on/off"))
+			m_pGrid->ToggleDrawSpawners();
 
 		if (m_MadeGoals && m_MadeObstacles)
 		{
@@ -234,6 +241,7 @@ void App_Flowfield::HandleMouseInput()
 				m_pGrid->AddGoal(mousePos);
 			break;
 		case Grid::SquareType::Spawner:
+			m_pGrid->AddSpawner(mousePos);
 			break;
 		}
 	}
@@ -322,4 +330,41 @@ void App_Flowfield::ReadFromFile()
 		std::cout << "\n===========ERROR===========================\n";
 		std::cout << "can't read file " << fileName << "\n";
 	}
+}
+
+void App_Flowfield::AddSpawners()
+{
+
+	auto spawners{ m_pGrid->GetSpawnerPos() };
+
+	if(spawners.size() <= 0) return;
+
+
+	for (const auto& s : spawners)
+		m_pSpawners.push_back(new Spawner(Spawner{0.f, s, 0}));
+
+	m_UseSpawners = true;
+}
+
+void App_Flowfield::UseSpawners(float deltaTime)
+{
+
+	int amountAgentsPerSpawner{ m_AmountOfAgent / int(m_pSpawners.size()) };
+
+	for (auto& s : m_pSpawners)
+	{
+		if (s->agentsSpawned <= amountAgentsPerSpawner-1)
+		{
+			s->elapsedTime += deltaTime;
+			if (s->elapsedTime >= m_TimePerSpawn)
+			{
+				s->elapsedTime = 0.f;
+				s->agentsSpawned += 1;
+				m_pAgents->push_back(new FlowfieldAgent(s->location ));
+			}
+
+		}
+
+	}
+
 }

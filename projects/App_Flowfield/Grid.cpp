@@ -49,6 +49,7 @@ void Grid::Render(float deltaTime) const
 	if (m_DrawObstacles) DrawObstacles();
 	if (m_DrawGoals) DrawGoals();
 	if (m_DrawDirections)DrawFlowfield();
+	if (m_DrawSpawners)DrawSpawners();
 }
 
 void Grid::Update(float deltaTime)
@@ -385,4 +386,17 @@ void Grid::MakeObstacleBodies()
 		
 	}
 
+}
+
+std::vector<Elite::Vector2> Grid::GetSpawnerPos() const
+{
+	std::vector<Elite::Vector2> spawnerLocs{};
+
+	auto addLoc{ [&spawnerLocs](const GridSquare& sqr) {
+		if (sqr.squareType != SquareType::Spawner) return false;
+		spawnerLocs.push_back(sqr.botLeft);
+	} };
+
+	std::for_each(m_pGrid->begin(), m_pGrid->end(), addLoc);
+	return spawnerLocs;
 }
