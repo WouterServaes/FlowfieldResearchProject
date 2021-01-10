@@ -136,13 +136,37 @@ void App_Flowfield::HandleImGui()
 				ImGui::Text("Goals ready");
 		}
 		//----
+		
+		//make flow field
+		if (m_MadeGoals && m_MadeObstacles)
+		{
+			if (!m_MadeFlowfield)
+			{
+				if (ImGui::Button("make flowfields"))
+				{
+					m_pGrid->MakeGoalVector();
+					m_MadeFlowfield = true;
+				}
+
+			}
+		}
+		//----
+
+		//save/load file
+		
+		if (m_MadeFlowfield)
+		{
+			if (ImGui::Button("save to file"))
+			{
+				SaveToFile();
+			}
+		}
+		//----
+
 
 		//spawn agents
-		if (!m_SpawnAgents && m_MadeGoals && m_MadeObstacles)
+		if (!m_SpawnAgents && m_MadeFlowfield)
 		{
-			if (!m_pGrid->GoalVectorReady())
-				m_pGrid->MakeGoalVector();
-
 			ImGui::InputInt("Amount of agents", &m_AmountOfAgent);
 
 			if (ImGui::Button("SpawnAgents"))
@@ -176,9 +200,6 @@ void App_Flowfield::HandleImGui()
 			ImGui::SliderInt("flowfield to draw", &m_FlowfieldToDraw, 0, m_pGrid->GetAmountOfFlowfields() - 1);
 		}
 		
-
-
-
 		ImGui::Spacing();
 
 		ImGui::Spacing();
@@ -248,5 +269,20 @@ void App_Flowfield::HandleAgentUpdate(float deltaTime)
 				}
 				return false;
 			}), m_pAgents->end());
+	}
+}
+
+void App_Flowfield::SaveToFile()
+{
+	std::cout << "\n======\n";
+	std::cout << "file name: ";
+	std::cin >> m_FileName;
+
+	if (m_pGrid->SaveToFile(m_FileName))
+		std::cout << "successfully written to file " << m_FileName << "\n";
+	else
+	{
+		std::cout << "\n===========ERROR===========================\n";
+		std::cout << "can't write to file " << m_FileName << "\n";
 	}
 }

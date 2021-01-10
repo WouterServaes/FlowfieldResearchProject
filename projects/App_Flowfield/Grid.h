@@ -44,6 +44,9 @@ public:
 	size_t GetAmountOfFlowfields()const { return m_Goals.size(); };
 	bool SetFlowfieldToDraw(size_t flowfieldNr);
 	bool FlowfieldDrawn()const { return m_DrawDirections; };
+
+	bool SaveToFile(const std::string& fileName) const;
+	bool SetFromFile(const std::string& fileName);
 private:
 	void InitGrid();
 

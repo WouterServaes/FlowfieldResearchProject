@@ -271,3 +271,65 @@ void Grid::MakeFlowfield()
 	}
 	delete dijkstraAlgorithm;
 }
+
+bool Grid::SaveToFile(const std::string& fileName) const
+{
+	std::ofstream output{};
+	output.open(fileName);
+	if (output.is_open())
+	{
+		for (size_t idx{}; idx< m_pGrid->size(); ++idx)
+		{
+			if (m_pGrid->at(idx).squareType == SquareType::Default) continue;
+
+			char type{};
+			if (m_pGrid->at(idx).squareType == SquareType::Goal) type = 'g';
+			else if (m_pGrid->at(idx).squareType == SquareType::Obstacle) type = 'o';	
+			output << type;
+			if (idx < 10)
+			{
+				output << "000";
+			}
+			else if (idx < 100)
+			{
+				output << "00";
+			}
+			else if (idx < 1000)
+			{
+				output << "0";
+			}
+
+			output << idx << std::endl;
+		}
+		output.close();
+		return true;
+	}
+		return false;
+}
+
+bool Grid::SetFromFile(const std::string& fileName)
+{
+	std::ifstream input{};
+	input.open(fileName);
+	if (input.is_open())
+	{
+		std::string line{};
+
+		for (line; getline(input, line);)
+		{
+			switch (line.at(0))
+			{
+			case 'g':
+				m_pGrid->at(std::stoi(line.substr(1, 4))).squareType = SquareType::Goal;
+				break;
+
+			case 'o':
+				m_pGrid->at(std::stoi(line.substr(1, 4))).squareType = SquareType::Obstacle;
+				break;
+			}
+		}
+		return true;
+	}
+	return false;
+	
+}

@@ -23,7 +23,7 @@ public:
 	void Start() override;
 	void Update(float deltaTime) override;
 	void Render(float deltaTime) const override;
-
+	void SaveToFile();
 private:
 	void SpawnAgents();
 	void HandleImGui();
@@ -32,11 +32,11 @@ private:
 	std::vector<FlowfieldAgent*>* m_pAgents{};
 	Grid* m_pGrid;
 
-	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_MadeObstacles{ false }, m_MadeGoals{ false }, m_HasGoals{false};
+	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_MadeObstacles{ false }, m_MadeGoals{ false }, m_HasGoals{ false }, m_MadeFlowfield{ false };
 	float m_TrimWorldSize{};
 	int m_AmountOfAgent{ 5 };
 	int m_FlowfieldToDraw{ 0 };
-
+	std::string m_FileName{};
 
 };
 #endif
