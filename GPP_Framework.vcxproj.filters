@@ -45,9 +45,6 @@
     <ClCompile Include="projects\Shared\BaseAgent.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="projects\App_Flowfield\Obstacle.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
     <ClCompile Include="projects\App_Flowfield\Grid.cpp">
       <Filter>Flowfield</Filter>
     </ClCompile>
@@ -200,9 +197,6 @@
     </ClInclude>
     <ClInclude Include="projects\App_Flowfield\Grid.h">
       <Filter>Flowfield</Filter>
-    </ClInclude>
-    <ClInclude Include="projects\App_Flowfield\Obstacle.h">
-      <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="framework\EliteRendering\Shaders.h">
       <Filter>Framework</Filter>

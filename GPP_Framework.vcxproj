@@ -311,7 +311,6 @@
     <ClCompile Include="framework\main.cpp" />
     <ClCompile Include="projects\App_Flowfield\Grid.cpp" />
     <ClCompile Include="projects\App_Flowfield\App_Flowfield.cpp" />
-    <ClCompile Include="projects\App_Flowfield\Obstacle.cpp" />
     <ClCompile Include="projects\App_Flowfield\SteeringAgent.cpp" />
     <ClCompile Include="projects\App_Flowfield\SteeringBehaviors.cpp" />
     <ClCompile Include="projects\Shared\BaseAgent.cpp" />
@@ -371,7 +370,6 @@
     <ClInclude Include="framework\EliteInterfaces\EIApp.h" />
     <ClInclude Include="projects\App_Flowfield\Grid.h" />
     <ClInclude Include="projects\App_Flowfield\App_Flowfield.h" />
-    <ClInclude Include="projects\App_Flowfield\Obstacle.h" />
     <ClInclude Include="projects\App_Flowfield\SteeringAgent.h" />
     <ClInclude Include="projects\App_Flowfield\SteeringBehaviors.h" />
     <ClInclude Include="projects\App_Flowfield\SteeringHelpers.h" />

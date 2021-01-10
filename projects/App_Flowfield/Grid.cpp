@@ -13,6 +13,10 @@ Grid::~Grid()
 {
 	m_pGrid->clear();
 	SAFE_DELETE(m_pGrid);
+
+	for (auto& obs : m_pObstacles)
+		delete obs;
+	m_pObstacles.clear();
 }
 
 void Grid::InitGrid()
@@ -53,6 +57,12 @@ void Grid::Update(float deltaTime)
 	{
 		madeFlowFields = true;
 		MakeFlowfield();
+	}
+
+	if (m_ObstaclesReady)
+	{
+		MakeObstacleBodies();
+		m_ObstaclesReady = false;
 	}
 }
 
@@ -270,6 +280,8 @@ void Grid::MakeFlowfield()
 		dijkstraAlgorithm->MakeFlowfield(idx, m_pGrid, flowfieldFlowDirections);
 	}
 	delete dijkstraAlgorithm;
+
+	m_ObstaclesReady = true;
 }
 
 bool Grid::SaveToFile(const std::string& fileName) const
@@ -342,4 +354,16 @@ void Grid::SetAllDefault()
 		if (sqr.squareType == SquareType::Default) continue;
 		sqr.squareType = SquareType::Default;
 	}
+}
+
+void Grid::MakeObstacleBodies()
+{
+	for (auto& sqr : *m_pGrid)
+	{
+		if (sqr.squareType != SquareType::Obstacle) continue;
+
+		m_pObstacles.push_back(new Obstacle(sqr.botLeft + Elite::Vector2(2.5f,2.5f), m_SquareSize/2.f));
+		
+	}
+
 }

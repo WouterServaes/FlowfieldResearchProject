@@ -1,5 +1,8 @@
 #pragma once
 #include "framework/EliteMath/EMath.h"
+
+class Obstacle;
+
 class Grid
 {
 public:
@@ -47,6 +50,7 @@ public:
 
 	bool SaveToFile(const std::string& fileName) const;
 	bool SetFromFile(const std::string& fileName);
+
 private:
 	void InitGrid();
 
@@ -58,6 +62,7 @@ private:
 
 	void DrawObstacles() const ;
 	void DrawGoals() const;
+	void MakeObstacleBodies();
 	
 
 	Elite::Vector2 GetMidOfSquare(size_t idx) const { //get the mid position of a square
@@ -72,7 +77,7 @@ private:
 	Elite::Vector2 m_WorldDimensions, m_GridResolution, m_SquareSize;
 	std::vector<GridSquare>* m_pGrid{ nullptr };
 	std::vector<Elite::Vector2> m_Goals{};
-
+	std::vector <Obstacle*> m_pObstacles{};
 	float m_MindDistanceFromTarget{ 2.f };
 
 	Elite::Color m_GridColor{ 180.f/255.f, 180.f/255.f, 180.f/255.f},
@@ -85,5 +90,27 @@ private:
 		m_MadeGoalVector{ false }, madeFlowFields{ false };
 
 	int m_AddedGoalsAmount{};
+
+	bool m_ObstaclesReady{false};
 };
 
+class Obstacle
+{
+public:
+	Obstacle(const Elite::Vector2& center, const Elite::Vector2& dimensions)
+	{
+		const Elite::RigidBodyDefine define = Elite::RigidBodyDefine(0.01f, 0.1f, Elite::eStatic, false);
+		const Transform transform = Transform(center, Elite::ZeroVector2);
+		m_pRigidBody = new RigidBody(define, transform);
+
+		Elite::EPhysicsBoxShape shape;
+	
+		shape.height = dimensions.y;
+		shape.width = dimensions.x;
+		
+		m_pRigidBody->AddShape(&shape);
+	}
+	~Obstacle() { if (m_pRigidBody ) delete m_pRigidBody;};
+private:
+	RigidBody* m_pRigidBody{ nullptr };
+};
