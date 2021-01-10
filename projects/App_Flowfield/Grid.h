@@ -66,7 +66,7 @@ private:
 
 	size_t GetGridSqrIdxAtPos(const Elite::Vector2& pos) const;
 	
-
+	void SetAllDefault();
 	
 
 	Elite::Vector2 m_WorldDimensions, m_GridResolution, m_SquareSize;

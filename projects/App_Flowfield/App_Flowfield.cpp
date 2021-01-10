@@ -113,6 +113,9 @@ void App_Flowfield::HandleImGui()
 		ImGui::Spacing();
 		ImGui::Spacing();
 
+		if(!m_SpawnAgents)
+			if (ImGui::Button("Use from file"))
+				ReadFromFile();
 		// obstacles
 		if (!m_MadeObstacles)
 		{
@@ -276,13 +279,35 @@ void App_Flowfield::SaveToFile()
 {
 	std::cout << "\n======\n";
 	std::cout << "file name: ";
-	std::cin >> m_FileName;
+	std::string fileName;
+	std::cin >> fileName;
 
-	if (m_pGrid->SaveToFile(m_FileName))
-		std::cout << "successfully written to file " << m_FileName << "\n";
+	if (m_pGrid->SaveToFile(fileName))
+		std::cout << "successfully written to file " << fileName << "\n";
 	else
 	{
 		std::cout << "\n===========ERROR===========================\n";
-		std::cout << "can't write to file " << m_FileName << "\n";
+		std::cout << "can't write to file " << fileName << "\n";
+	}
+}
+
+void App_Flowfield::ReadFromFile()
+{
+	std::cout << "\n======\n";
+	std::cout << "file name: ";
+	std::string fileName;
+	std::cin >> fileName;
+
+	if (m_pGrid->SetFromFile(fileName))
+	{
+		std::cout << "successfully read file " << fileName << "\n";
+		m_MadeGoals = true;
+		m_MadeObstacles = true;
+		m_HasGoals = true;
+	}
+	else
+	{
+		std::cout << "\n===========ERROR===========================\n";
+		std::cout << "can't read file " << fileName << "\n";
 	}
 }

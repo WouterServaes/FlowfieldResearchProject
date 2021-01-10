@@ -313,6 +313,7 @@ bool Grid::SetFromFile(const std::string& fileName)
 	input.open(fileName);
 	if (input.is_open())
 	{
+		SetAllDefault();
 		std::string line{};
 
 		for (line; getline(input, line);)
@@ -332,4 +333,13 @@ bool Grid::SetFromFile(const std::string& fileName)
 	}
 	return false;
 	
+}
+
+void Grid::SetAllDefault()
+{
+	for (auto& sqr: *m_pGrid)
+	{
+		if (sqr.squareType == SquareType::Default) continue;
+		sqr.squareType = SquareType::Default;
+	}
 }
