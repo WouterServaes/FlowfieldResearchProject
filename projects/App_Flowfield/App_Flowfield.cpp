@@ -34,7 +34,7 @@ void App_Flowfield::Update(float deltaTime)
 	HandleKeyboardInput();
 	HandleMouseInput();
 	if (!m_MadeGoals)
-		m_HasGoals = m_pGrid->AmountGoalsAdded() > 0;
+		m_AmountOfGoals = m_pGrid->AmountGoalsAdded();
 
 	m_pGrid->Update(deltaTime);
 	HandleAgentUpdate(deltaTime);
@@ -69,7 +69,7 @@ void App_Flowfield::SpawnAgents()
 {
 	if (m_UseSpawners) return;;
 	for (size_t idx{}; idx < m_AmountOfAgent; ++idx)
-		m_pAgents->push_back(new FlowfieldAgent(m_pGrid->GetValidRandomPos()));
+		m_pAgents->push_back(new FlowfieldAgent(m_pGrid->GetValidRandomPos(), m_AmountOfGoals));
 }
 
 void App_Flowfield::HandleImGui()
@@ -131,7 +131,7 @@ void App_Flowfield::HandleImGui()
 
 		//goals
 
-		if (m_HasGoals)
+		if (m_AmountOfGoals)
 		{
 			if (!m_MadeGoals)
 			{
@@ -323,7 +323,7 @@ void App_Flowfield::ReadFromFile()
 		std::cout << "successfully read file " << fileName << "\n";
 		m_MadeGoals = true;
 		m_MadeObstacles = true;
-		m_HasGoals = true;
+		m_AmountOfGoals = m_pGrid->AmountGoalsAdded();
 	}
 	else
 	{
@@ -360,7 +360,7 @@ void App_Flowfield::UseSpawners(float deltaTime)
 			{
 				s->elapsedTime = 0.f;
 				s->agentsSpawned += 1;
-				m_pAgents->push_back(new FlowfieldAgent(s->location ));
+				m_pAgents->push_back(new FlowfieldAgent(s->location, m_AmountOfGoals));
 			}
 
 		}

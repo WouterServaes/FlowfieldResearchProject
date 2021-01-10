@@ -4,7 +4,7 @@
 class FlowfieldAgent
 {
 public:
-	FlowfieldAgent(const Elite::Vector2& spawnPos);
+	FlowfieldAgent(const Elite::Vector2& spawnPos, int amountOfGoals);
 	~FlowfieldAgent();
 
 	void RenderAgent(float deltaTime, int activeFlowfield) const;
