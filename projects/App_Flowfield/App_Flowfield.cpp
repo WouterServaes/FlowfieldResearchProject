@@ -168,6 +168,9 @@ void App_Flowfield::HandleImGui()
 		}
 		//----
 
+		if (m_AmountOfGoals > 1)
+			ImGui::Checkbox("remove at goal", &m_KillAtGoal);
+
 		//spawn agents
 		if (!m_SpawnAgents && m_MadeFlowfield)
 		{
@@ -269,14 +272,23 @@ void App_Flowfield::HandleAgentUpdate(float deltaTime)
 	{
 		agentCurrentPos = a->GetCurrentPos();
 		agentCurrentEndGoal = a->GetEndGoal();
-		a->SetReachedGoal(m_pGrid->AgentReachedGoal(agentCurrentPos, agentCurrentEndGoal));
 
-		if (a->GetReachedGoal() == false);
+		a->SetReachedGoal(m_pGrid->AgentReachedGoal(agentCurrentPos, agentCurrentEndGoal));
+		bool reachedGoal{ a->GetReachedGoal() };
+
+		if (!m_KillAtGoal && reachedGoal)
+		{
+			a->NewEndGoalTarget(Elite::randomInt(m_AmountOfGoals));
+			reachedGoal = false;
+		}
+
+		if (!reachedGoal );
 		{
 			m_pGrid->MoveSqr(agentCurrentPos, a->CurrentTargetPos(), agentCurrentEndGoal, a->GetNeedsInitialMove());
 			a->UpdateAgent(deltaTime);
 		}
 
+		if (!m_KillAtGoal) continue;
 		if (a->IsMarkedForRemove())
 			agentsToRemove++;
 	}
