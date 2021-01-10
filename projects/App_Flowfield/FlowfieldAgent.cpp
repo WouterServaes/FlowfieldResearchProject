@@ -29,7 +29,7 @@ void FlowfieldAgent::RenderAgent(float deltaTime, int activeFlowfield) const
 	else
 		m_pAgent->SetBodyColor(m_AgentDefaultColor);
 	m_pAgent->Render(deltaTime);
-	DrawCurrentTarget();
+	//DrawCurrentTarget();
 }
 
 void FlowfieldAgent::UpdateAgent(float deltaTime)

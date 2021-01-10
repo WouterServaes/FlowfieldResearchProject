@@ -23,8 +23,7 @@ public:
 	void Start() override;
 	void Update(float deltaTime) override;
 	void Render(float deltaTime) const override;
-	void SaveToFile();
-	void ReadFromFile();
+	
 private:
 	struct Spawner
 	{
@@ -41,6 +40,9 @@ private:
 
 	void AddSpawners();
 	void UseSpawners(float deltaTime);
+
+	void SaveToFile();
+	void ReadFromFile();
 	std::vector<FlowfieldAgent*>* m_pAgents{};
 	Grid* m_pGrid;
 

@@ -316,7 +316,8 @@ bool Grid::SaveToFile(const std::string& fileName) const
 
 			char type{};
 			if (m_pGrid->at(idx).squareType == SquareType::Goal) type = 'g';
-			else if (m_pGrid->at(idx).squareType == SquareType::Obstacle) type = 'o';	
+			else if (m_pGrid->at(idx).squareType == SquareType::Obstacle) type = 'o';
+			else if (m_pGrid->at(idx).squareType == SquareType::Spawner) type = 's';
 			output << type;
 			if (idx < 10)
 			{
@@ -354,10 +355,15 @@ bool Grid::SetFromFile(const std::string& fileName)
 			{
 			case 'g':
 				m_pGrid->at(std::stoi(line.substr(1, 4))).squareType = SquareType::Goal;
+				m_AddedGoalsAmount++;
 				break;
 
 			case 'o':
 				m_pGrid->at(std::stoi(line.substr(1, 4))).squareType = SquareType::Obstacle;
+				break;
+
+			case 's':
+				m_pGrid->at(std::stoi(line.substr(1, 4))).squareType = SquareType::Spawner;
 				break;
 			}
 		}
