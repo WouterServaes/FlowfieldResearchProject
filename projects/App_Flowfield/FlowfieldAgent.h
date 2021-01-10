@@ -23,7 +23,7 @@ public:
 	bool IsMarkedForRemove()const { return m_MarkForRemove; };
 private:
 	Elite::Color m_AgentDefaultColor{ 0.f, 0.f, 0.f },
-		m_AgentHightlightColor{1.f,0.f, 0.f};
+		m_AgentHightlightColor{0.f,0.f, 1.f};
 
 	SteeringAgent* m_pAgent{};
 	Seek* m_pBehavior{};
@@ -34,6 +34,6 @@ private:
 	bool m_ReachedGoal{ false }, m_NeedsInitalMove{ true }, m_MarkForRemove{false};
 
 	float m_DeleteElapsedSec{};
-	const float m_DeleteTime{ 5.f };
+	const float m_DeleteTime{ .5f };
 };
 

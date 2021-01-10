@@ -32,7 +32,7 @@ private:
 	std::vector<FlowfieldAgent*>* m_pAgents{};
 	Grid* m_pGrid;
 
-	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_MadeObstacles{ false }, m_MadeGoals{ false };
+	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_MadeObstacles{ false }, m_MadeGoals{ false }, m_HasGoals{false};
 	float m_TrimWorldSize{};
 	int m_AmountOfAgent{ 5 };
 	int m_FlowfieldToDraw{ 0 };

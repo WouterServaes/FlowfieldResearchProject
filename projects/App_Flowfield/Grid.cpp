@@ -45,7 +45,6 @@ void Grid::Render(float deltaTime) const
 	if (m_DrawObstacles) DrawObstacles();
 	if (m_DrawGoals) DrawGoals();
 	if (m_DrawDirections)DrawFlowfield();
-
 }
 
 void Grid::Update(float deltaTime)
@@ -67,10 +66,10 @@ void Grid::DrawGridSqr(size_t idx, const Elite::Color& color, bool fillSqr) cons
 	sqrPoint[2] = Elite::Vector2{ sqr.botLeft.x + m_SquareSize.x, sqr.botLeft.y + m_SquareSize.y };
 	sqrPoint[3] = Elite::Vector2{ sqr.botLeft.x, sqr.botLeft.y + m_SquareSize.y };
 
-	if (fillSqr)
-		DEBUGRENDERER2D->DrawSolidPolygon(&sqrPoint[0], 4, color, DEBUGRENDERER2D->NextDepthSlice());
-	else
+	if (!fillSqr)
 		DEBUGRENDERER2D->DrawPolygon(&sqrPoint[0], 4, color, DEBUGRENDERER2D->NextDepthSlice());
+	else
+		DEBUGRENDERER2D->DrawSolidPolygon(&sqrPoint[0], 4, color, DEBUGRENDERER2D->NextDepthSlice());
 }
 
 void Grid::DrawGrid() const
@@ -148,9 +147,21 @@ void Grid::AddGoal(const Elite::Vector2& goalPos)
 	auto& sqrType{ m_pGrid->at(sqrIdx).squareType };
 
 	if (sqrType != SquareType::Goal)
+	{
+		m_AddedGoalsAmount++;
 		sqrType = SquareType::Goal;
+	}
 	else
+	{
+		m_AddedGoalsAmount--;
 		sqrType = SquareType::Default;
+	}
+
+}
+
+int Grid::AmountGoalsAdded()const
+{
+	return m_AddedGoalsAmount;
 }
 
 size_t Grid::GetGridSqrIdxAtPos(const Elite::Vector2& pos) const

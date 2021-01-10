@@ -29,8 +29,11 @@ void App_Flowfield::Start()
 
 void App_Flowfield::Update(float deltaTime)
 {
+
 	HandleMouseInput();
-	
+	if (!m_MadeGoals)
+		m_HasGoals = m_pGrid->AmountGoalsAdded() > 0;
+
 	m_pGrid->Update(deltaTime);
 	HandleAgentUpdate(deltaTime);
 
@@ -121,14 +124,17 @@ void App_Flowfield::HandleImGui()
 		//----
 
 		//goals
-		if (!m_MadeGoals)
-		{
-			if (ImGui::Button("Goals ready"))
-				m_MadeGoals = true;
 
+		if (m_HasGoals)
+		{
+			if (!m_MadeGoals)
+			{
+				if (ImGui::Button("Goals ready"))
+					m_MadeGoals = true;
+			}
+			else
+				ImGui::Text("Goals ready");
 		}
-		else
-			ImGui::Text("Goals ready");
 		//----
 
 		//spawn agents
@@ -136,6 +142,8 @@ void App_Flowfield::HandleImGui()
 		{
 			if (!m_pGrid->GoalVectorReady())
 				m_pGrid->MakeGoalVector();
+
+			ImGui::InputInt("Amount of agents", &m_AmountOfAgent);
 
 			if (ImGui::Button("SpawnAgents"))
 			{
@@ -158,11 +166,16 @@ void App_Flowfield::HandleImGui()
 			m_pGrid->ToggleDrawObstacles();
 		if (ImGui::Button("Draw goals on/off"))
 			m_pGrid->ToggleDrawGoals();
-		if (ImGui::Button("Draw flowfield on/off"))
-			m_pGrid->ToggleDrawDirections();
 
-		if (m_pGrid->FlowfieldDrawn())
+		if (m_MadeGoals && m_MadeObstacles)
+		{
+			if (ImGui::Button("Draw flowfield on/off"))
+				m_pGrid->ToggleDrawDirections();
+
+
 			ImGui::SliderInt("flowfield to draw", &m_FlowfieldToDraw, 0, m_pGrid->GetAmountOfFlowfields() - 1);
+		}
+		
 
 
 
@@ -223,6 +236,7 @@ void App_Flowfield::HandleAgentUpdate(float deltaTime)
 			agentsToRemove++;
 	}
 
+
 	for (int idx{}; idx < agentsToRemove; ++idx)
 	{
 		m_pAgents->erase(std::remove_if(m_pAgents->begin(), m_pAgents->end(), [](FlowfieldAgent* agent)
@@ -233,6 +247,6 @@ void App_Flowfield::HandleAgentUpdate(float deltaTime)
 					return true;
 				}
 				return false;
-			}));
+			}), m_pAgents->end());
 	}
 }

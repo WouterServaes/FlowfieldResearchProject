@@ -30,6 +30,7 @@ public:
 	//adding to grid
 	void AddObstacle(const Elite::Vector2& obstaclePos);
 	void AddGoal(const Elite::Vector2& goalPos);
+	int AmountGoalsAdded()const;
 	//goal vector
 	void MakeGoalVector();
 	bool GoalVectorReady() { return m_MadeGoalVector; };
@@ -71,13 +72,15 @@ private:
 
 	float m_MindDistanceFromTarget{ 2.f };
 
-	Elite::Color m_GridColor{ 0.f, 0.f, 1.f },
-		m_DirectionColor{ 0.f, 0.f, 0.f },
+	Elite::Color m_GridColor{ 180.f/255.f, 180.f/255.f, 180.f/255.f},
+		m_DirectionColor{0.f, 0.f, 1.f},
 		m_ObstacleColor{1.f, 0.f, 0.f},
 		m_GoalColor{0.f, 1.f, 0.f},
-		m_HighlitedGoalColor{.5f, .5f, 0.f};
+		m_HighlitedGoalColor{ m_DirectionColor };
 
 	bool m_DrawGrid{ true }, m_DrawObstacles{ true }, m_DrawGoals{ true }, m_DrawDirections{false},
 		m_MadeGoalVector{ false }, madeFlowFields{ false };
+
+	int m_AddedGoalsAmount{};
 };
 
