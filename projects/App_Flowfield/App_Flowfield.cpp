@@ -278,10 +278,10 @@ void App_Flowfield::HandleAgentUpdate(float deltaTime)
 void App_Flowfield::SaveToFile()
 {
 	std::cout << "\n======\n";
-	std::cout << "file name: ";
+	std::cout << "file name (only file name and extension, no path, file is saved in Environments folder): ";
 	std::string fileName;
 	std::cin >> fileName;
-
+	fileName = "Environments/" + fileName;
 	if (m_pGrid->SaveToFile(fileName))
 		std::cout << "successfully written to file " << fileName << "\n";
 	else
@@ -294,10 +294,10 @@ void App_Flowfield::SaveToFile()
 void App_Flowfield::ReadFromFile()
 {
 	std::cout << "\n======\n";
-	std::cout << "file name: ";
+	std::cout << "file name (only file name and extension, no path, file is saved in Environments folder): ";
 	std::string fileName;
 	std::cin >> fileName;
-
+	fileName = "Environments/" + fileName;
 	if (m_pGrid->SetFromFile(fileName))
 	{
 		std::cout << "successfully read file " << fileName << "\n";
