@@ -27,6 +27,8 @@ public:
 	unsigned int GetWidth() const { return m_width; }
 	unsigned int GetHeight() const { return m_height; }
 
+
+	
 private:
 	//--- Datamembers ---
 	Elite::Vector2 m_center = Elite::ZeroVector2;

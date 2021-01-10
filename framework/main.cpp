@@ -34,20 +34,18 @@ int main(int argc, char* argv[])
 	{
 		//Window Creation
 		Elite::WindowParams params;
-
-
+		
 		EliteWindow* pWindow = new EliteWindow();
 		ELITE_ASSERT(pWindow, "Window has not been created.");
 		pWindow->CreateEWindow(params);
 
 		if (runExeWithCoordinates)
 			pWindow->SetWindowPosition(x, y);
-
 		//Create Frame (can later be extended by creating FrameManager for MultiThreaded Rendering)
 		EliteFrame* pFrame = new EliteFrame();
 		ELITE_ASSERT(pFrame, "Frame has not been created.");
 		pFrame->CreateFrame(pWindow);
-
+		
 		//Create a 2D Camera for debug rendering in this case
 		Camera2D* pCamera = new Camera2D(params.width, params.height);
 		ELITE_ASSERT(pCamera, "Camera has not been created.");

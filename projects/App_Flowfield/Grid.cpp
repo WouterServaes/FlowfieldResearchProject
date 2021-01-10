@@ -4,10 +4,9 @@
 #include "GeneratingFlowField.h"
 
 Grid::Grid(const Elite::Vector2& worldSize, const Elite::Vector2& gridResolution)
-	:m_WorldDimensions{worldSize}, m_GridResolution(gridResolution), m_SquareSize{m_WorldDimensions/m_GridResolution}
+	:m_WorldDimensions{ worldSize }, m_GridResolution(gridResolution), m_SquareSize{ m_WorldDimensions / m_GridResolution }
 {
 	InitGrid();
-
 }
 
 Grid::~Grid()
@@ -42,10 +41,11 @@ void Grid::InitGrid()
 
 void Grid::Render(float deltaTime) const
 {
-	if(m_DrawGrid) DrawGrid();
+	if (m_DrawGrid) DrawGrid();
 	if (m_DrawObstacles) DrawObstacles();
 	if (m_DrawGoals) DrawGoals();
 	if (m_DrawDirections)DrawFlowfield();
+
 }
 
 void Grid::Update(float deltaTime)
@@ -67,7 +67,7 @@ void Grid::DrawGridSqr(size_t idx, const Elite::Color& color, bool fillSqr) cons
 	sqrPoint[2] = Elite::Vector2{ sqr.botLeft.x + m_SquareSize.x, sqr.botLeft.y + m_SquareSize.y };
 	sqrPoint[3] = Elite::Vector2{ sqr.botLeft.x, sqr.botLeft.y + m_SquareSize.y };
 
-	if(fillSqr)
+	if (fillSqr)
 		DEBUGRENDERER2D->DrawSolidPolygon(&sqrPoint[0], 4, color, DEBUGRENDERER2D->NextDepthSlice());
 	else
 		DEBUGRENDERER2D->DrawPolygon(&sqrPoint[0], 4, color, DEBUGRENDERER2D->NextDepthSlice());
@@ -82,21 +82,19 @@ void Grid::DrawGrid() const
 	}
 }
 
-void Grid::DrawFlowfield() const 
+void Grid::DrawFlowfield() const
 {
 	float arrowLength{ 2.f };
 
-	if(m_pGrid->at(0).flowDirections.size()>0)
+	if (m_pGrid->at(0).flowDirections.size() > 0)
 		for (size_t idx{}; idx < m_pGrid->size(); ++idx)
 		{
-			if (m_pGrid->at(idx).squareType != SquareType::Default) 
+			if (m_pGrid->at(idx).squareType != SquareType::Default)
 				continue;
 			DEBUGRENDERER2D->DrawDirection(GetMidOfSquare(idx), m_pGrid->at(idx).flowDirections[m_FlowfieldToDraw].GetNormalized(), arrowLength, m_DirectionColor);
 			DEBUGRENDERER2D->DrawPoint(GetMidOfSquare(idx), 2.f, { 0, 0, 0 });
-
 		}
 }
-
 
 bool Grid::SetFlowfieldToDraw(size_t flowfieldNr)
 {
@@ -108,7 +106,7 @@ bool Grid::SetFlowfieldToDraw(size_t flowfieldNr)
 	return false;
 }
 
-void Grid::DrawObstacles() const 
+void Grid::DrawObstacles() const
 {
 	for (size_t idx{}; idx < m_pGrid->size(); ++idx)
 	{
@@ -128,7 +126,7 @@ void Grid::DrawGoals() const
 		if (flowfieldNr == m_FlowfieldToDraw)
 			color = m_HighlitedGoalColor;
 
-		flowfieldNr +=1;
+		flowfieldNr += 1;
 		DrawGridSqr(idx, color, true);
 	}
 }
@@ -142,8 +140,6 @@ void Grid::AddObstacle(const Elite::Vector2& obstaclePos)
 		sqrType = SquareType::Obstacle;
 	else
 		sqrType = SquareType::Default;
-	
-
 }
 
 void Grid::AddGoal(const Elite::Vector2& goalPos)
@@ -155,7 +151,6 @@ void Grid::AddGoal(const Elite::Vector2& goalPos)
 		sqrType = SquareType::Goal;
 	else
 		sqrType = SquareType::Default;
-	
 }
 
 size_t Grid::GetGridSqrIdxAtPos(const Elite::Vector2& pos) const
@@ -190,24 +185,20 @@ void Grid::MakeGoalVector()
 			}
 			m_Goals.push_back(GetMidOfSquare(idx));
 		}
-
-	
 }
 
-bool Grid::MoveSqr(const Elite::Vector2& currentPos,Elite::Vector2& targetPos, int goalNr, bool firstMove)
+bool Grid::MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr, bool firstMove)
 {
-
-	if (firstMove || Elite::Distance(currentPos, targetPos)<= m_MindDistanceFromTarget)
+	if (firstMove || Elite::Distance(currentPos, targetPos) <= m_MindDistanceFromTarget)
 	{
-		const auto sqrIdx{ GetGridSqrIdxAtPos(currentPos) }; //sqr index of square the agent is currently in 
-		const auto nextSqrPosFromDirection{currentPos + (m_pGrid->at(sqrIdx).flowDirections[goalNr].GetNormalized() * (m_SquareSize.x + (m_SquareSize.x/2)))}; //a position from the current position of the agent along the direction the agent should be following over a length (1.5 a square's length)	
+		const auto sqrIdx{ GetGridSqrIdxAtPos(currentPos) }; //sqr index of square the agent is currently in
+		const auto nextSqrPosFromDirection{ currentPos + (m_pGrid->at(sqrIdx).flowDirections[goalNr].GetNormalized() * (m_SquareSize.x + (m_SquareSize.x / 2))) }; //a position from the current position of the agent along the direction the agent should be following over a length (1.5 a square's length)
 		const auto newSqrIdx{ GetGridSqrIdxAtPos(nextSqrPosFromDirection) }; //the square idx of the square at this new position
-		targetPos =  GetMidOfSquare(newSqrIdx); //next target for the agent = the middle of this new square
+		targetPos = GetMidOfSquare(newSqrIdx); //next target for the agent = the middle of this new square
 		return true;
 	}
 
 	return false;
-
 }
 
 int Grid::GetNewGoal(int currentGoal) const
@@ -215,7 +206,7 @@ int Grid::GetNewGoal(int currentGoal) const
 	int newGoalIdx{};
 	do
 	{
-		newGoalIdx = Elite::randomInt(m_Goals.size()-1);
+		newGoalIdx = Elite::randomInt(m_Goals.size() - 1);
 	} while (newGoalIdx == currentGoal);
 	return newGoalIdx;
 }
@@ -231,8 +222,8 @@ Elite::Vector2 Grid::GetValidRandomPos()
 
 	do
 	{
-		randomIdx = Elite::randomInt(m_pGrid->size()-1);
-	} while (m_pGrid->at(randomIdx).squareType!=SquareType::Default);
+		randomIdx = Elite::randomInt(m_pGrid->size() - 1);
+	} while (m_pGrid->at(randomIdx).squareType != SquareType::Default);
 
 	return GetMidOfSquare(randomIdx);
 }
@@ -248,25 +239,24 @@ bool Grid::IsPointInGrid(const Elite::Vector2& point)
 void Grid::MakeFlowfield()
 {
 	const std::vector<Elite::Vector2> flowfieldFlowDirections = {
-	{ 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 },{ 0, -1 }, {1,-1} }; //every square around a square
+		{ 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 }, { 0, -1 }, { 1, -1 } }; //every square around a square
 
-	//finding a goals
+		//finding a goals
 	std::vector<size_t> goalIndxs{};
+
 	for (const auto& gridSqr : *m_pGrid)
-	{
 		if (gridSqr.squareType == Grid::SquareType::Goal)
 			goalIndxs.push_back(gridSqr.column + (gridSqr.row * m_GridResolution.x));
-	}
+	
 
 	Algorithms::Dijkstra* dijkstraAlgorithm = new Algorithms::Dijkstra(&m_GridResolution);
 
 	//for every goal: run algorithm and make flowfield;
+
 	for (size_t idx{}; idx < goalIndxs.size(); ++idx)
 	{
 		dijkstraAlgorithm->RunAlgorithm(idx, goalIndxs[idx], m_pGrid);
 		dijkstraAlgorithm->MakeFlowfield(idx, m_pGrid, flowfieldFlowDirections);
 	}
-
 	delete dijkstraAlgorithm;
-	
 }

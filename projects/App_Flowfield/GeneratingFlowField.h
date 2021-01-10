@@ -23,6 +23,12 @@ namespace Algorithms
 				int lowestDist{ max };
 				int lowestDistNeighborIdx{};
 
+
+				//if diagonals are allowed, check if the flowfield doesn's go through a wall corner
+				//         
+				//	xxxxx/---------      => where x are walls and - / is a flow field path.
+				//	----/xxxxxxxxxx				=> instead of doing, the path should go around the walls
+				
 				for (size_t neighborLoopIdx{}; neighborLoopIdx < flowfieldFlowDirections.size(); ++neighborLoopIdx)
 				{
 					size_t neighborColumn{ column + size_t(flowfieldFlowDirections[neighborLoopIdx].x) };
@@ -37,23 +43,67 @@ namespace Algorithms
 
 					if (m_DistancesGrid[neighborIdx] <= lowestDist)
 					{
-						lowestDist = m_DistancesGrid[neighborIdx];
+						if(flowfieldFlowDirections[neighborLoopIdx].y != 0 && flowfieldFlowDirections[neighborLoopIdx].x != 0)
+							if (CheckDiagonalThroughWall(pGrid, flowfieldFlowDirections, neighborLoopIdx, neighborColumn, neighborRow)) continue;
+
 						lowestDistNeighborIdx = neighborLoopIdx;
+						lowestDist = m_DistancesGrid[neighborIdx];
 					}
 				}
 				pGrid->at(idx).flowDirections[goalNr] = flowfieldFlowDirections[lowestDistNeighborIdx];
 			}
 		}
+		
 	protected:
 		struct IdxToVisit {
 			size_t idx{};
 			int distance{};
 
 		};
-
 		std::vector<int> m_DistancesGrid{};
 		const Elite::Vector2* m_pGridResolution{};
+
+	private:
+		bool CheckDiagonalThroughWall(const std::vector<Grid::GridSquare>* pGrid, const std::vector<Elite::Vector2>& flowfieldFlowDirections, const size_t& neighborLoopIdx, const size_t& neighborC, const size_t& neighborR) const
+		{
+			size_t neighborYneighbor{}, neighborXneighbor{};
+
+
+			if (flowfieldFlowDirections[neighborLoopIdx].y > 0)
+			{
+				neighborYneighbor = neighborC + size_t((neighborR - 1) * m_pGridResolution->x);
+
+				if (flowfieldFlowDirections[neighborLoopIdx].x > 0)
+				{
+					neighborXneighbor = (neighborC - 1) + size_t(neighborR * m_pGridResolution->x);
+				}
+				else if (flowfieldFlowDirections[neighborLoopIdx].x < 0)
+				{
+					neighborXneighbor = (neighborC + 1) + size_t(neighborR * m_pGridResolution->x);
+				}
+			}
+			else if(flowfieldFlowDirections[neighborLoopIdx].y < 0)
+			{
+				neighborYneighbor = neighborC + size_t((neighborR + 1) * m_pGridResolution->x);
+
+				if (flowfieldFlowDirections[neighborLoopIdx].x > 0)
+				{
+					neighborXneighbor = (neighborC - 1) + size_t(neighborR * m_pGridResolution->x);
+				}
+				else if (flowfieldFlowDirections[neighborLoopIdx].x < 0)
+				{
+					neighborXneighbor = (neighborC + 1) + size_t(neighborR * m_pGridResolution->x);
+				}
+			}
+
+			if (pGrid->at(neighborYneighbor).squareType == Grid::SquareType::Obstacle &&
+				pGrid->at(neighborXneighbor).squareType == Grid::SquareType::Obstacle)
+				return true;
+			
+			return false;
+		}
 	};
+		
 
 	class Dijkstra final:public Algorithm
 	{
@@ -62,6 +112,8 @@ namespace Algorithms
 		~Dijkstra() = default;
 		void RunAlgorithm(int goalNr, size_t goalGridIdx, std::vector<Grid::GridSquare>* pGrid)
 		{
+			m_DistancesGrid.clear();
+
 			//to visit vector 
 			std::vector<IdxToVisit>toVisit{};
 
