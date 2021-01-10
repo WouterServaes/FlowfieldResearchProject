@@ -24,12 +24,11 @@ void App_Flowfield::Start()
 	m_pGrid = new Grid(Elite::Vector2(m_TrimWorldSize, m_TrimWorldSize), Elite::Vector2(50.f, 50.f));
 
 	m_pAgents = new std::vector< FlowfieldAgent*>();
-	
 }
 
 void App_Flowfield::Update(float deltaTime)
 {
-
+	HandleKeyboardInput();
 	HandleMouseInput();
 	if (!m_MadeGoals)
 		m_HasGoals = m_pGrid->AmountGoalsAdded() > 0;
@@ -37,7 +36,7 @@ void App_Flowfield::Update(float deltaTime)
 	m_pGrid->Update(deltaTime);
 	HandleAgentUpdate(deltaTime);
 
-	HandleImGui();	
+	HandleImGui();
 }
 
 void App_Flowfield::Render(float deltaTime) const
@@ -82,7 +81,7 @@ void App_Flowfield::HandleImGui()
 		bool windowActive = true;
 		ImGui::SetNextWindowPos(ImVec2((float)width - menuWidth - 10, 10));
 		ImGui::SetNextWindowSize(ImVec2((float)menuWidth, (float)height - 20));
-		ImGui::Begin("Gameplay Programming", &windowActive,  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_NoMove);
+		ImGui::Begin("Gameplay Programming", &windowActive, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_NoMove);
 		ImGui::PushAllowKeyboardFocus(false);
 
 		//Elements
@@ -113,7 +112,7 @@ void App_Flowfield::HandleImGui()
 		ImGui::Spacing();
 		ImGui::Spacing();
 
-		if(!m_SpawnAgents)
+		if (!m_SpawnAgents)
 			if (ImGui::Button("Use from file"))
 				ReadFromFile();
 		// obstacles
@@ -139,7 +138,7 @@ void App_Flowfield::HandleImGui()
 				ImGui::Text("Goals ready");
 		}
 		//----
-		
+
 		//make flow field
 		if (m_MadeGoals && m_MadeObstacles)
 		{
@@ -150,13 +149,12 @@ void App_Flowfield::HandleImGui()
 					m_pGrid->MakeGoalVector();
 					m_MadeFlowfield = true;
 				}
-
 			}
 		}
 		//----
 
 		//save/load file
-		
+
 		if (m_MadeFlowfield)
 		{
 			if (ImGui::Button("save to file"))
@@ -165,7 +163,6 @@ void App_Flowfield::HandleImGui()
 			}
 		}
 		//----
-
 
 		//spawn agents
 		if (!m_SpawnAgents && m_MadeFlowfield)
@@ -199,10 +196,9 @@ void App_Flowfield::HandleImGui()
 			if (ImGui::Button("Draw flowfield on/off"))
 				m_pGrid->ToggleDrawDirections();
 
-
 			ImGui::SliderInt("flowfield to draw", &m_FlowfieldToDraw, 0, m_pGrid->GetAmountOfFlowfields() - 1);
 		}
-		
+
 		ImGui::Spacing();
 
 		ImGui::Spacing();
@@ -222,26 +218,43 @@ void App_Flowfield::HandleMouseInput()
 	{
 		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eLeft);
 		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
-		if (m_pGrid->IsPointInGrid(mousePos))
+
+		if (!m_pGrid->IsPointInGrid(mousePos)) return;
+
+		switch (m_TypeToPlace)
+		{
+		case Grid::SquareType::Default:
+			break;
+		case Grid::SquareType::Obstacle:
 			if (!m_MadeObstacles)
 				m_pGrid->AddObstacle(mousePos);
-	}
-	else if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eMiddle))
-	{
-		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eMiddle);
-		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
-		if (m_pGrid->IsPointInGrid(mousePos))
+			break;
+		case Grid::SquareType::Goal:
 			if (!m_MadeGoals)
 				m_pGrid->AddGoal(mousePos);
+			break;
+		case Grid::SquareType::Spawner:
+			break;
+		}
 	}
+}
+
+void App_Flowfield::HandleKeyboardInput()
+{
+	if (INPUTMANAGER->IsKeyboardKeyUp(InputScancode::eScancode_1))
+		m_TypeToPlace = Grid::SquareType::Goal;
+	if (INPUTMANAGER->IsKeyboardKeyUp(InputScancode::eScancode_2))
+		m_TypeToPlace = Grid::SquareType::Obstacle;
+	if (INPUTMANAGER->IsKeyboardKeyUp(InputScancode::eScancode_3))
+		m_TypeToPlace = Grid::SquareType::Spawner;
+	if (INPUTMANAGER->IsKeyboardKeyUp(InputScancode::eScancode_4))
+		m_TypeToPlace = Grid::SquareType::Default;
 }
 
 void App_Flowfield::HandleAgentUpdate(float deltaTime)
 {
-
 	Elite::Vector2 agentCurrentPos{};
 	int agentCurrentEndGoal{};
-
 
 	int agentsToRemove{};
 	for (auto& a : *m_pAgents)
@@ -259,7 +272,6 @@ void App_Flowfield::HandleAgentUpdate(float deltaTime)
 		if (a->IsMarkedForRemove())
 			agentsToRemove++;
 	}
-
 
 	for (int idx{}; idx < agentsToRemove; ++idx)
 	{

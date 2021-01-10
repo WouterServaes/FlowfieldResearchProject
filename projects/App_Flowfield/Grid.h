@@ -8,7 +8,7 @@ class Grid
 public:
 	enum class SquareType
 	{
-		Default, Obstacle, Goal
+		Default, Obstacle, Goal, Spawner
 	};
 
 	struct GridSquare
@@ -33,6 +33,7 @@ public:
 	//adding to grid
 	void AddObstacle(const Elite::Vector2& obstaclePos);
 	void AddGoal(const Elite::Vector2& goalPos);
+	void AddSpawner(const Elite::Vector2& spawnerPos);
 	int AmountGoalsAdded()const;
 	//goal vector
 	void MakeGoalVector();
@@ -62,6 +63,7 @@ private:
 
 	void DrawObstacles() const ;
 	void DrawGoals() const;
+	void DrawSpawners() const;
 	void MakeObstacleBodies();
 	
 
@@ -84,7 +86,8 @@ private:
 		m_DirectionColor{0.f, 0.f, 1.f},
 		m_ObstacleColor{1.f, 0.f, 0.f},
 		m_GoalColor{0.f, 1.f, 0.f},
-		m_HighlitedGoalColor{ m_DirectionColor };
+		m_HighlitedGoalColor{ m_DirectionColor },
+		m_SpawnerColor{1.f, 1.f, 0.f};
 
 	bool m_DrawGrid{ true }, m_DrawObstacles{ true }, m_DrawGoals{ true }, m_DrawDirections{false},
 		m_MadeGoalVector{ false }, madeFlowFields{ false };

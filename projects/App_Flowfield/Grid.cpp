@@ -140,6 +140,15 @@ void Grid::DrawGoals() const
 	}
 }
 
+void Grid::DrawSpawners() const
+{
+	for (size_t idx{}; idx < m_pGrid->size(); ++idx)
+	{
+		if (m_pGrid->at(idx).squareType != SquareType::Spawner) continue;
+		DrawGridSqr(idx, m_SpawnerColor, true);
+	}
+}
+
 void Grid::AddObstacle(const Elite::Vector2& obstaclePos)
 {
 	size_t sqrIdx{ GetGridSqrIdxAtPos(obstaclePos) };
@@ -167,6 +176,16 @@ void Grid::AddGoal(const Elite::Vector2& goalPos)
 		sqrType = SquareType::Default;
 	}
 
+}
+
+void Grid::AddSpawner(const Elite::Vector2& spawnerPos)
+{
+	size_t sqrIdx{ GetGridSqrIdxAtPos(spawnerPos) };
+	auto& sqrType{ m_pGrid->at(sqrIdx).squareType };
+	if (sqrType != SquareType::Spawner)
+		sqrType = SquareType::Spawner;
+	else
+		sqrType = SquareType::Default;
 }
 
 int Grid::AmountGoalsAdded()const

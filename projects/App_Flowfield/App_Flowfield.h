@@ -29,6 +29,7 @@ private:
 	void SpawnAgents();
 	void HandleImGui();
 	void HandleMouseInput();
+	void HandleKeyboardInput();
 	void HandleAgentUpdate(float deltaTime);
 	std::vector<FlowfieldAgent*>* m_pAgents{};
 	Grid* m_pGrid;
@@ -37,6 +38,8 @@ private:
 	float m_TrimWorldSize{};
 	int m_AmountOfAgent{ 5 };
 	int m_FlowfieldToDraw{ 0 };
+
+	Grid::SquareType m_TypeToPlace{ Grid::SquareType::Default };
 
 };
 #endif
