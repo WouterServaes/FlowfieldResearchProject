@@ -24,12 +24,13 @@ FlowfieldAgent::~FlowfieldAgent()
 
 void FlowfieldAgent::RenderAgent(float deltaTime, int activeFlowfield) const
 {
+
+	
 	if (m_CurrentEndGoalIdx == activeFlowfield)
 		m_pAgent->SetBodyColor(m_AgentHightlightColor);
 	else
 		m_pAgent->SetBodyColor(m_AgentDefaultColor);
 	m_pAgent->Render(deltaTime);
-	//DrawCurrentTarget();
 }
 
 void FlowfieldAgent::UpdateAgent(float deltaTime)

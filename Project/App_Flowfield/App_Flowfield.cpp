@@ -153,6 +153,7 @@ void App_Flowfield::HandleImGui()
 				{
 					m_pGrid->MakeGoalVector();
 					m_MadeFlowfield = true;
+					m_pGrid->ToggleDrawObstacles();
 				}
 			}
 		}
@@ -195,8 +196,6 @@ void App_Flowfield::HandleImGui()
 		//toggle drawing grid things
 		if (ImGui::Button("Draw grid on/off"))
 			m_pGrid->ToggleDrawGrid();
-		if (ImGui::Button("Draw obstacles on/off"))
-			m_pGrid->ToggleDrawObstacles();
 		if (ImGui::Button("Draw goals on/off"))
 			m_pGrid->ToggleDrawGoals();
 		if (ImGui::Button("Draw spawners on/off"))
@@ -239,13 +238,16 @@ void App_Flowfield::HandleMouseInput()
 		case Grid::SquareType::Obstacle:
 			if (!m_MadeObstacles)
 				m_pGrid->AddObstacle(mousePos);
+			else if(m_SpawnAgents)
+				m_pGrid->AddObstacleWhileRunningFf(mousePos);
 			break;
 		case Grid::SquareType::Goal:
 			if (!m_MadeGoals)
 				m_pGrid->AddGoal(mousePos);
 			break;
 		case Grid::SquareType::Spawner:
-			m_pGrid->AddSpawner(mousePos);
+			if(!m_MadeFlowfield)
+				m_pGrid->AddSpawner(mousePos);
 			break;
 		}
 	}
@@ -381,3 +383,4 @@ void App_Flowfield::UseSpawners(float deltaTime)
 	}
 
 }
+

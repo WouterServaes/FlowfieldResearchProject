@@ -46,7 +46,7 @@ void Grid::InitGrid()
 void Grid::Render(float deltaTime) const
 {
 	if (m_DrawGrid) DrawGrid();
-	if (m_DrawObstacles) DrawObstacles();
+	if (m_DrawObstacles)DrawObstacles();
 	if (m_DrawGoals) DrawGoals();
 	if (m_DrawDirections)DrawFlowfield();
 	if (m_DrawSpawners)DrawSpawners();
@@ -60,7 +60,7 @@ void Grid::Update(float deltaTime)
 		MakeFlowfield();
 	}
 
-	if (m_ObstaclesReady)
+	if (m_ObstaclesReady && !m_AddedObsWhileRunning)
 	{
 		MakeObstacleBodies();
 		m_ObstaclesReady = false;
@@ -176,7 +176,6 @@ void Grid::AddGoal(const Elite::Vector2& goalPos)
 		m_AddedGoalsAmount--;
 		sqrType = SquareType::Default;
 	}
-
 }
 
 void Grid::AddSpawner(const Elite::Vector2& spawnerPos)
@@ -288,7 +287,6 @@ void Grid::MakeFlowfield()
 	for (const auto& gridSqr : *m_pGrid)
 		if (gridSqr.squareType == Grid::SquareType::Goal)
 			goalIndxs.push_back(gridSqr.column + (gridSqr.row * m_GridResolution.x));
-	
 
 	Algorithms::Dijkstra* dijkstraAlgorithm = new Algorithms::Dijkstra(&m_GridResolution);
 
@@ -310,7 +308,7 @@ bool Grid::SaveToFile(const std::string& fileName) const
 	output.open(fileName);
 	if (output.is_open())
 	{
-		for (size_t idx{}; idx< m_pGrid->size(); ++idx)
+		for (size_t idx{}; idx < m_pGrid->size(); ++idx)
 		{
 			if (m_pGrid->at(idx).squareType == SquareType::Default) continue;
 
@@ -337,7 +335,7 @@ bool Grid::SaveToFile(const std::string& fileName) const
 		output.close();
 		return true;
 	}
-		return false;
+	return false;
 }
 
 bool Grid::SetFromFile(const std::string& fileName)
@@ -370,28 +368,44 @@ bool Grid::SetFromFile(const std::string& fileName)
 		return true;
 	}
 	return false;
-	
 }
 
 void Grid::SetAllDefault()
 {
-	for (auto& sqr: *m_pGrid)
+	for (auto& sqr : *m_pGrid)
 	{
 		if (sqr.squareType == SquareType::Default) continue;
 		sqr.squareType = SquareType::Default;
 	}
 }
 
-void Grid::MakeObstacleBodies()
+void Grid::MakeObstacleBodies(int sqrIdx)
 {
-	for (auto& sqr : *m_pGrid)
-	{
-		if (sqr.squareType != SquareType::Obstacle) continue;
+	if (sqrIdx == -1)
+		for (auto& sqr : *m_pGrid)
+		{
+			if (sqr.squareType != SquareType::Obstacle) continue;
+			m_pObstacles.push_back(new Obstacle(sqr.botLeft + Elite::Vector2(2.5f, 2.5f), m_SquareSize / 2.f, (sqr.column + (sqr.row * m_GridResolution.x))));
+		}
+	else
+		m_pObstacles.push_back(new Obstacle(m_pGrid->at(sqrIdx).botLeft + Elite::Vector2(2.5f, 2.5f), m_SquareSize / 2.f, sqrIdx));
+}
 
-		m_pObstacles.push_back(new Obstacle(sqr.botLeft + Elite::Vector2(2.5f,2.5f), m_SquareSize/2.f));
-		
-	}
+void Grid::RemoveObstacleBody(int sqrIdx)
+{
+	//deleting the object
+	for (auto& o : m_pObstacles)
+		if (o->GetSqrIdx() == sqrIdx)
+		{
+			delete o;
+			o = nullptr;
+			break;
+		}
 
+	//fixing the object vector by erasing the deleted object
+	m_pObstacles.erase(std::remove_if(m_pObstacles.begin(), m_pObstacles.end(), [sqrIdx](Obstacle* o) {
+		return o == nullptr;
+		}));
 }
 
 std::vector<Elite::Vector2> Grid::GetSpawnerPos() const
@@ -405,4 +419,26 @@ std::vector<Elite::Vector2> Grid::GetSpawnerPos() const
 
 	std::for_each(m_pGrid->begin(), m_pGrid->end(), addLoc);
 	return spawnerLocs;
+}
+
+void Grid::AddObstacleWhileRunningFf(const Elite::Vector2& obstaclePos)
+{
+	size_t sqrIdx{ GetGridSqrIdxAtPos(obstaclePos) };
+	auto& sqrType{ m_pGrid->at(sqrIdx).squareType };
+	if (sqrType != SquareType::Default && sqrType != SquareType::Obstacle) return;
+
+	m_AddedObsWhileRunning = true;
+
+	if (sqrType != SquareType::Obstacle)
+	{
+		sqrType = SquareType::Obstacle;
+		MakeObstacleBodies(sqrIdx);
+	}
+	else
+	{
+		sqrType = SquareType::Default;
+		RemoveObstacleBody(sqrIdx);
+	}
+
+	MakeFlowfield();
 }

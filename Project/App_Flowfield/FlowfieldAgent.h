@@ -15,7 +15,6 @@ public:
 	int GetEndGoal()const { return m_CurrentEndGoalIdx; };
 	Elite::Vector2 GetCurrentPos()const { return m_pAgent->GetPosition(); };
 	Elite::Vector2& CurrentTargetPos() { return m_CurrentTargetPos; };
-	void DrawCurrentTarget()const { DEBUGRENDERER2D->DrawPoint(m_CurrentTargetPos, 5.f, { 1, 1, 1 }); };
 
 	void SetReachedGoal(bool reachedGoal) { m_ReachedGoal = reachedGoal; };
 	bool GetReachedGoal()const { return m_ReachedGoal; };
@@ -35,6 +34,6 @@ private:
 	bool m_ReachedGoal{ false }, m_NeedsInitalMove{ true }, m_MarkForRemove{false};
 
 	float m_DeleteElapsedSec{};
-	const float m_DeleteTime{ .5f };
+	const float m_DeleteTime{ .2f };
 };
 

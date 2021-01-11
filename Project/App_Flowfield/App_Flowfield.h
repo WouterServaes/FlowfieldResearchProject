@@ -43,6 +43,7 @@ private:
 
 	void SaveToFile();
 	void ReadFromFile();
+
 	std::vector<FlowfieldAgent*>* m_pAgents{};
 	Grid* m_pGrid;
 
@@ -54,5 +55,14 @@ private:
 	Grid::SquareType m_TypeToPlace{ Grid::SquareType::Default };
 	std::vector< Spawner*> m_pSpawners{};
 	const float m_TimePerSpawn{ .2f };
+
+
+
+
+
+
+
+
+
 };
 #endif

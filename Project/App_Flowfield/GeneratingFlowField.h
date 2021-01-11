@@ -182,15 +182,4 @@ namespace Algorithms
 
 		}
 	};
-
-	class AStar final :public Algorithm
-	{
-	public:
-		AStar(const Elite::Vector2* gridResolution) :Algorithm(gridResolution) {};
-		~AStar() = default;
-		void RunAlgorithm(int goalNr, size_t goalGridIdx, std::vector<Grid::GridSquare>* pGrid)
-		{
-
-		}
-	};
 }
