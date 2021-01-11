@@ -46,6 +46,7 @@ private:
 	void SaveToFile();
 	void ReadFromFile();
 
+	void ResetAgents();
 	std::vector<FlowfieldAgent*>* m_pAgents{};
 	Grid* m_pGrid;
 

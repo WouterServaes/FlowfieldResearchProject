@@ -168,12 +168,12 @@ void Grid::AddGoal(const Elite::Vector2& goalPos)
 
 	if (sqrType != SquareType::Goal)
 	{
-		m_AddedGoalsAmount++;
+		m_AddedGoalsAmount+=1;
 		sqrType = SquareType::Goal;
 	}
 	else
 	{
-		m_AddedGoalsAmount--;
+		m_AddedGoalsAmount-=1;
 		sqrType = SquareType::Default;
 	}
 }

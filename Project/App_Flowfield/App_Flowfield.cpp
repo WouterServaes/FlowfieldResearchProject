@@ -93,39 +93,26 @@ void App_Flowfield::HandleImGui()
 		int const height = DEBUGRENDERER2D->GetActiveCamera()->GetHeight();
 		bool windowActive = true;
 
+		//tile types
 		ImGui::SetNextWindowPos(ImVec2(10, 10));
-		ImGui::SetNextWindowSize(ImVec2((float)menuWidth, 50));
-		ImGui::Begin("Tile type", &windowActive, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
-		switch (m_TypeToPlace)
-		{
-		case Grid::SquareType::Default:
-			ImGui::Text("Nothing [4]");
-			break;
-		case Grid::SquareType::Obstacle:
-			ImGui::Text("Obstacle [2]");
-			break;
-		case Grid::SquareType::Goal:
-			ImGui::Text("Goal [1]");
-			break;
-		case Grid::SquareType::Spawner:
-			ImGui::Text("Spawner [3]");
-			break;
-		default:
-			break;
-		}
+		ImGui::SetNextWindowSize(ImVec2(100, 100));
+		ImGui::Begin("Tile types", &windowActive, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
+		ImGui::Text("Goal [1]");
+		ImGui::Text("Obstacle [2]");
+		ImGui::Text("Spawner [3]");
 		ImGui::End();
+		//----
 
-
+		//main
 		ImGui::SetNextWindowPos(ImVec2((float)width - menuWidth - 10, 10));
 		ImGui::SetNextWindowSize(ImVec2((float)menuWidth, (float)height - 20));
 		ImGui::Begin("Gameplay Programming", &windowActive, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_NoMove);
 		ImGui::PushAllowKeyboardFocus(false);
-
-		//Elements
 		ImGui::Text("CONTROLS");
 		ImGui::Indent();
-		ImGui::Text("LMB: place target");
+		ImGui::Text("LMB: fill tile");
 		ImGui::Text("RMB: move cam.");
+		ImGui::Text("MMB: spawn agent");
 		ImGui::Text("Scrollwheel: zoom cam.");
 		ImGui::Unindent();
 
@@ -225,6 +212,13 @@ void App_Flowfield::HandleImGui()
 			ImGui::Text("Agents Spawned");
 		//---
 
+		//reset agents
+		if (m_SpawnAgents && m_MadeFlowfield)
+		{
+			if (ImGui::Button("reset agents"))
+				ResetAgents();
+		}
+		//---
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
@@ -447,3 +441,14 @@ void App_Flowfield::ContinueAgentSpawning(const Elite::Vector2& pos)
 	SpawnAgent(pos);
 }
 
+void App_Flowfield::ResetAgents()
+{
+	for (auto& a : *m_pAgents)
+		SAFE_DELETE(a);
+
+	for (auto& s : m_pSpawners)
+		s->agentsSpawned = 0;
+
+	m_pAgents->clear();
+	
+}
