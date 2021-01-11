@@ -28,6 +28,10 @@ void App_Flowfield::Start()
 
 void App_Flowfield::Update(float deltaTime)
 {
+
+	if (m_AddAgentsWithMouse)
+		m_AgentSpawnWithMouseElapsedSec += deltaTime;
+
 	if (m_SpawnAgents && m_UseSpawners)
 		UseSpawners(deltaTime);
 
@@ -68,8 +72,13 @@ void App_Flowfield::Render(float deltaTime) const
 void App_Flowfield::SpawnAgents()
 {
 	if (m_UseSpawners) return;;
-	for (size_t idx{}; idx < m_AmountOfAgent; ++idx)
-		m_pAgents->push_back(new FlowfieldAgent(m_pGrid->GetValidRandomPos(), m_AmountOfGoals));
+	for (size_t idx{}; idx < m_StartAmountAgents; ++idx)
+		SpawnAgent(m_pGrid->GetValidRandomPos());
+}
+
+void App_Flowfield::SpawnAgent(const Elite::Vector2& pos)
+{
+	m_pAgents->push_back(new FlowfieldAgent(pos, m_AmountOfGoals));
 }
 
 void App_Flowfield::HandleImGui()
@@ -202,7 +211,7 @@ void App_Flowfield::HandleImGui()
 		//spawn agents
 		if (!m_SpawnAgents && m_MadeFlowfield)
 		{
-			ImGui::InputInt("Amount of agents", &m_AmountOfAgent);
+			ImGui::InputInt("Amount of agents", &m_StartAmountAgents);
 
 			if (ImGui::Button("SpawnAgents"))
 			{
@@ -276,6 +285,27 @@ void App_Flowfield::HandleMouseInput()
 				m_pGrid->AddSpawner(mousePos);
 			break;
 		}
+	}
+
+	
+
+	if (INPUTMANAGER->IsMouseButtonDown(InputMouseButton::eMiddle))
+	{
+		if (!m_SpawnAgents) return;
+
+		auto const mouseData = INPUTMANAGER->GetMouseData(InputType::eMouseButton, InputMouseButton::eMiddle);
+		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
+
+		if (!m_pGrid->IsPointInGrid(mousePos)) return;
+		m_AddAgentsWithMouse = true;
+
+		ContinueAgentSpawning(mousePos);
+		
+	}
+
+	if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eMiddle))
+	{
+		m_AddAgentsWithMouse = false;
 	}
 }
 
@@ -390,7 +420,7 @@ void App_Flowfield::AddSpawners()
 void App_Flowfield::UseSpawners(float deltaTime)
 {
 
-	int amountAgentsPerSpawner{ m_AmountOfAgent / int(m_pSpawners.size()) };
+	int amountAgentsPerSpawner{ m_StartAmountAgents / int(m_pSpawners.size()) };
 
 	for (auto& s : m_pSpawners)
 	{
@@ -408,5 +438,12 @@ void App_Flowfield::UseSpawners(float deltaTime)
 
 	}
 
+}
+
+void App_Flowfield::ContinueAgentSpawning(const Elite::Vector2& pos)
+{
+	//if (m_AgentSpawnWithMouseElapsedSec < .2f) return;
+	m_AgentSpawnWithMouseElapsedSec = 0.f;
+	SpawnAgent(pos);
 }
 

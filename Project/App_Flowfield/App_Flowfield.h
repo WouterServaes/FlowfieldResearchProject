@@ -33,6 +33,8 @@ private:
 	};
 
 	void SpawnAgents();
+	void SpawnAgent(const Elite::Vector2& pos);
+	void ContinueAgentSpawning(const Elite::Vector2& pos);
 	void HandleImGui();
 	void HandleMouseInput();
 	void HandleKeyboardInput();
@@ -47,22 +49,17 @@ private:
 	std::vector<FlowfieldAgent*>* m_pAgents{};
 	Grid* m_pGrid;
 
-	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_MadeObstacles{ false }, m_MadeGoals{ false }, m_MadeFlowfield{ false }, m_UseSpawners{ false }, m_KillAtGoal{true};
-	float m_TrimWorldSize{};
-	int m_AmountOfAgent{ 5 };
-	int m_FlowfieldToDraw{ 0 }, m_AmountOfGoals{};
+
+	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_UseSpawners{ false }, m_KillAtGoal{ true }, m_AddAgentsWithMouse{false},
+		m_MadeObstacles{ false }, m_MadeGoals{ false }, m_MadeFlowfield{ false };
+
+	float m_TrimWorldSize{}, m_AgentSpawnWithMouseElapsedSec{};
+
+	int m_StartAmountAgents{ 5 }, m_FlowfieldToDraw{ 0 }, m_AmountOfGoals{};
 
 	Grid::SquareType m_TypeToPlace{ Grid::SquareType::Default };
 	std::vector< Spawner*> m_pSpawners{};
 	const float m_TimePerSpawn{ .2f };
-
-
-
-
-
-
-
-
-
+	
 };
 #endif
