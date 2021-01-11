@@ -83,6 +83,30 @@ void App_Flowfield::HandleImGui()
 		int const width = DEBUGRENDERER2D->GetActiveCamera()->GetWidth();
 		int const height = DEBUGRENDERER2D->GetActiveCamera()->GetHeight();
 		bool windowActive = true;
+
+		ImGui::SetNextWindowPos(ImVec2(10, 10));
+		ImGui::SetNextWindowSize(ImVec2((float)menuWidth, 50));
+		ImGui::Begin("Tile type", &windowActive, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
+		switch (m_TypeToPlace)
+		{
+		case Grid::SquareType::Default:
+			ImGui::Text("Nothing [4]");
+			break;
+		case Grid::SquareType::Obstacle:
+			ImGui::Text("Obstacle [2]");
+			break;
+		case Grid::SquareType::Goal:
+			ImGui::Text("Goal [1]");
+			break;
+		case Grid::SquareType::Spawner:
+			ImGui::Text("Spawner [3]");
+			break;
+		default:
+			break;
+		}
+		ImGui::End();
+
+
 		ImGui::SetNextWindowPos(ImVec2((float)width - menuWidth - 10, 10));
 		ImGui::SetNextWindowSize(ImVec2((float)menuWidth, (float)height - 20));
 		ImGui::Begin("Gameplay Programming", &windowActive, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_NoMove);
