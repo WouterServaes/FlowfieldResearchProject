@@ -228,17 +228,14 @@ void Grid::MakeGoalVector()
 		}
 }
 
-bool Grid::MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr, bool firstMove)
+void Grid::MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr)
 {
-	if (firstMove || Elite::Distance(currentPos, targetPos) <= m_MindDistanceFromTarget)
-	{
+	
 		const auto sqrIdx{ GetGridSqrIdxAtPos(currentPos) }; //sqr index of square the agent is currently in
 		const auto nextSqrPosFromDirection{ currentPos + (m_pGrid->at(sqrIdx).flowDirections[goalNr].GetNormalized() * (m_SquareSize.x + (m_SquareSize.x / 2))) }; //a position from the current position of the agent along the direction the agent should be following over a length (1.5 a square's length)
 		const auto newSqrIdx{ GetGridSqrIdxAtPos(nextSqrPosFromDirection) }; //the square idx of the square at this new position
 		targetPos = GetMidOfSquare(newSqrIdx); //next target for the agent = the middle of this new square
-		return true;
-	}
-	return false;
+
 }
 
 int Grid::GetNewGoal(int currentGoal) const

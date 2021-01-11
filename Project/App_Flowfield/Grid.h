@@ -29,7 +29,7 @@ public:
 	void Update(float deltaTime); //general update function
 
 	//agent movement
-	bool MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr, bool firstMove); //takes currentPos and calculates a new targetPos, goalNr represents the flowfield nr, firstmove used for an initial move
+	void MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr); //takes currentPos and calculates a new targetPos, goalNr represents the flowfield nr, firstmove used for an initial move
 	bool AgentReachedGoal(const Elite::Vector2& agentPos, int agentGoal); //checks whether the agent has reached their goal
 	
 	//flowfield
@@ -102,8 +102,6 @@ private:
 	std::vector<Elite::Vector2> m_Goals{};
 
 	std::vector <Obstacle*> m_pObstacles{};
-
-	float m_MindDistanceFromTarget{ 2.f }; //minimum distance an agent has to be from a target
 
 	Elite::Color m_GridColor{ 180.f / 255.f, 180.f / 255.f, 180.f / 255.f },
 		m_ObstacleColor{ 1.f, 0.f, 0.f },

@@ -39,9 +39,6 @@ void FlowfieldAgent::UpdateAgent(float deltaTime)
 		else
 			m_MarkForRemove = true;
 	}
-
-	m_NeedsInitalMove = false;
-
 	m_pAgent->GetSteeringBehavior()->SetTarget(m_CurrentTargetPos);
 	m_pAgent->Update(deltaTime);
 }

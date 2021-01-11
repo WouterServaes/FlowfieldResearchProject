@@ -333,7 +333,7 @@ void App_Flowfield::HandleAgentUpdate(float deltaTime)
 
 		if (!reachedGoal);
 		{
-			m_pGrid->MoveSqr(agentCurrentPos, a->CurrentTargetPos(), agentCurrentEndGoal, a->GetNeedsInitialMove());
+			m_pGrid->MoveSqr(agentCurrentPos, a->CurrentTargetPos(), agentCurrentEndGoal);
 			a->UpdateAgent(deltaTime);
 		}
 
