@@ -39,23 +39,23 @@
     <ClCompile Include="framework\EliteWindow\SDLWindow\SDLWindow.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="projects\App_Flowfield\App_Flowfield.cpp">
+    <ClCompile Include="project\App_Flowfield\App_Flowfield.cpp">
       <Filter>Flowfield</Filter>
     </ClCompile>
-    <ClCompile Include="projects\Shared\BaseAgent.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="projects\App_Flowfield\Grid.cpp">
+    <ClCompile Include="project\App_Flowfield\FlowfieldAgent.cpp">
       <Filter>Flowfield</Filter>
     </ClCompile>
-    <ClCompile Include="projects\App_Flowfield\SteeringAgent.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="projects\App_Flowfield\SteeringBehaviors.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="projects\App_Flowfield\FlowfieldAgent.cpp">
+    <ClCompile Include="project\App_Flowfield\Grid.cpp">
       <Filter>Flowfield</Filter>
+    </ClCompile>
+    <ClCompile Include="project\App_Flowfield\SteeringAgent.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="project\App_Flowfield\SteeringBehaviors.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="project\Shared\BaseAgent.cpp">
+      <Filter>Framework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,32 +189,32 @@
     <ClInclude Include="framework\math\CoreDefines.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="projects\App_Flowfield\App_Flowfield.h">
-      <Filter>Flowfield</Filter>
-    </ClInclude>
-    <ClInclude Include="projects\Shared\BaseAgent.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="projects\App_Flowfield\Grid.h">
-      <Filter>Flowfield</Filter>
-    </ClInclude>
     <ClInclude Include="framework\EliteRendering\Shaders.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="projects\App_Flowfield\SteeringAgent.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="projects\App_Flowfield\SteeringBehaviors.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="projects\App_Flowfield\SteeringHelpers.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="projects\App_Flowfield\FlowfieldAgent.h">
+    <ClInclude Include="project\App_Flowfield\App_Flowfield.h">
       <Filter>Flowfield</Filter>
     </ClInclude>
-    <ClInclude Include="projects\App_Flowfield\GeneratingFlowField.h">
+    <ClInclude Include="project\App_Flowfield\FlowfieldAgent.h">
       <Filter>Flowfield</Filter>
+    </ClInclude>
+    <ClInclude Include="project\App_Flowfield\GeneratingFlowField.h">
+      <Filter>Flowfield</Filter>
+    </ClInclude>
+    <ClInclude Include="project\App_Flowfield\Grid.h">
+      <Filter>Flowfield</Filter>
+    </ClInclude>
+    <ClInclude Include="project\App_Flowfield\SteeringAgent.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="project\App_Flowfield\SteeringBehaviors.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="project\App_Flowfield\SteeringHelpers.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="project\Shared\BaseAgent.h">
+      <Filter>Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

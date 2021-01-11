@@ -1,6 +1,7 @@
 #pragma once
-#include "projects/App_Flowfield/SteeringAgent.h"
-#include "projects/App_Flowfield/SteeringBehaviors.h"
+#include "Project/App_Flowfield/SteeringAgent.h"
+#include "Project/App_Flowfield/SteeringBehaviors.h"
+
 class FlowfieldAgent
 {
 public:

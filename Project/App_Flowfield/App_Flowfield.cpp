@@ -105,6 +105,7 @@ void App_Flowfield::HandleImGui()
 		ImGui::Indent();
 		ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
 		ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+		if(m_AmountOfAgent) ImGui::Text("%1 Agents", m_AmountOfAgent);
 		ImGui::Unindent();
 
 		ImGui::Spacing();

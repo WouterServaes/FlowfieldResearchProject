@@ -9,7 +9,7 @@
 
 //---------- Registered Applications -----------
 
-	#include "projects/App_Flowfield/App_Flowfield.h"
+	#include "Project/App_Flowfield/App_Flowfield.h"
 
 
 
