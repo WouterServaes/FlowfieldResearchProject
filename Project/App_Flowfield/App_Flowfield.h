@@ -18,12 +18,12 @@ public:
 	//Constructor & Destructor
 	App_Flowfield() = default;
 	virtual ~App_Flowfield();
-	
+
 	//App Functions
 	void Start() override;
 	void Update(float deltaTime) override;
 	void Render(float deltaTime) const override;
-	
+
 private:
 	struct Spawner
 	{
@@ -50,8 +50,7 @@ private:
 	std::vector<FlowfieldAgent*>* m_pAgents{};
 	Grid* m_pGrid;
 
-
-	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_UseSpawners{ false }, m_KillAtGoal{ true }, m_AddAgentsWithMouse{false},
+	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_UseSpawners{ false }, m_KillAtGoal{ true }, m_AddAgentsWithMouse{ false },
 		m_MadeObstacles{ false }, m_MadeGoals{ false }, m_MadeFlowfield{ false };
 
 	float m_TrimWorldSize{}, m_AgentSpawnWithMouseElapsedSec{};
@@ -61,6 +60,5 @@ private:
 	Grid::SquareType m_TypeToPlace{ Grid::SquareType::Default };
 	std::vector< Spawner*> m_pSpawners{};
 	const float m_TimePerSpawn{ .2f };
-	
 };
 #endif

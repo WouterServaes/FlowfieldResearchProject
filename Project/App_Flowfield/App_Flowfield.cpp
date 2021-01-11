@@ -28,7 +28,6 @@ void App_Flowfield::Start()
 
 void App_Flowfield::Update(float deltaTime)
 {
-
 	if (m_AddAgentsWithMouse)
 		m_AgentSpawnWithMouseElapsedSec += deltaTime;
 
@@ -125,9 +124,9 @@ void App_Flowfield::HandleImGui()
 		ImGui::Indent();
 		ImGui::Text("%.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
 		ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
-		if(m_pAgents->size()) 
+		if (m_pAgents->size())
 			ImGui::Text("%1i Agents", int(m_pAgents->size()));
-		
+
 		ImGui::Unindent();
 
 		ImGui::Spacing();
@@ -267,7 +266,7 @@ void App_Flowfield::HandleMouseInput()
 		case Grid::SquareType::Obstacle:
 			if (!m_MadeObstacles)
 				m_pGrid->AddObstacle(mousePos);
-			else if(m_SpawnAgents)
+			else if (m_SpawnAgents)
 				m_pGrid->AddObstacleWhileRunningFf(mousePos);
 			break;
 		case Grid::SquareType::Goal:
@@ -275,13 +274,11 @@ void App_Flowfield::HandleMouseInput()
 				m_pGrid->AddGoal(mousePos);
 			break;
 		case Grid::SquareType::Spawner:
-			if(!m_MadeFlowfield)
+			if (!m_MadeFlowfield)
 				m_pGrid->AddSpawner(mousePos);
 			break;
 		}
 	}
-
-	
 
 	if (INPUTMANAGER->IsMouseButtonDown(InputMouseButton::eMiddle))
 	{
@@ -294,7 +291,6 @@ void App_Flowfield::HandleMouseInput()
 		m_AddAgentsWithMouse = true;
 
 		ContinueAgentSpawning(mousePos);
-		
 	}
 
 	if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eMiddle))
@@ -335,7 +331,7 @@ void App_Flowfield::HandleAgentUpdate(float deltaTime)
 			reachedGoal = false;
 		}
 
-		if (!reachedGoal );
+		if (!reachedGoal);
 		{
 			m_pGrid->MoveSqr(agentCurrentPos, a->CurrentTargetPos(), agentCurrentEndGoal, a->GetNeedsInitialMove());
 			a->UpdateAgent(deltaTime);
@@ -399,26 +395,23 @@ void App_Flowfield::ReadFromFile()
 
 void App_Flowfield::AddSpawners()
 {
-
 	auto spawners{ m_pGrid->GetSpawnerPos() };
 
-	if(spawners.size() <= 0) return;
-
+	if (spawners.size() <= 0) return;
 
 	for (const auto& s : spawners)
-		m_pSpawners.push_back(new Spawner(Spawner{0.f, s, 0}));
+		m_pSpawners.push_back(new Spawner(Spawner{ 0.f, s, 0 }));
 
 	m_UseSpawners = true;
 }
 
 void App_Flowfield::UseSpawners(float deltaTime)
 {
-
 	int amountAgentsPerSpawner{ m_StartAmountAgents / int(m_pSpawners.size()) };
 
 	for (auto& s : m_pSpawners)
 	{
-		if (s->agentsSpawned <= amountAgentsPerSpawner-1)
+		if (s->agentsSpawned <= amountAgentsPerSpawner - 1)
 		{
 			s->elapsedTime += deltaTime;
 			if (s->elapsedTime >= m_TimePerSpawn)
@@ -427,11 +420,8 @@ void App_Flowfield::UseSpawners(float deltaTime)
 				s->agentsSpawned += 1;
 				m_pAgents->push_back(new FlowfieldAgent(s->location, m_AmountOfGoals));
 			}
-
 		}
-
 	}
-
 }
 
 void App_Flowfield::ContinueAgentSpawning(const Elite::Vector2& pos)
@@ -450,5 +440,4 @@ void App_Flowfield::ResetAgents()
 		s->agentsSpawned = 0;
 
 	m_pAgents->clear();
-	
 }

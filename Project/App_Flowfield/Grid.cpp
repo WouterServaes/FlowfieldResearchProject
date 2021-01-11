@@ -22,6 +22,7 @@ Grid::~Grid()
 void Grid::InitGrid()
 {
 	m_pGrid = new std::vector<GridSquare>{};
+
 	auto worldBot{ -m_WorldDimensions.y / 2 }
 		, worldTop{ m_WorldDimensions.y / 2 }
 		, worldLeft{ -m_WorldDimensions.x / 2 }
@@ -54,9 +55,9 @@ void Grid::Render(float deltaTime) const
 
 void Grid::Update(float deltaTime)
 {
-	if (m_MadeGoalVector && !madeFlowFields)
+	if (m_MadeGoalVector && !m_MadeFlowFields)
 	{
-		madeFlowFields = true;
+		m_MadeFlowFields = true;
 		MakeFlowfield();
 	}
 
@@ -94,7 +95,7 @@ void Grid::DrawGrid() const
 
 void Grid::DrawFlowfield() const
 {
-	float arrowLength{ 2.f };
+	float arrowLength{ 2.f }; //length of the flow field arrow
 
 	if (m_pGrid->at(0).flowDirections.size() > 0)
 		for (size_t idx{}; idx < m_pGrid->size(); ++idx)
@@ -168,14 +169,19 @@ void Grid::AddGoal(const Elite::Vector2& goalPos)
 
 	if (sqrType != SquareType::Goal)
 	{
-		m_AddedGoalsAmount+=1;
+		m_AddedGoalsAmount += 1;
 		sqrType = SquareType::Goal;
 	}
 	else
 	{
-		m_AddedGoalsAmount-=1;
+		m_AddedGoalsAmount -= 1;
 		sqrType = SquareType::Default;
 	}
+}
+
+int Grid::AmountGoalsAdded()const
+{
+	return m_AddedGoalsAmount;
 }
 
 void Grid::AddSpawner(const Elite::Vector2& spawnerPos)
@@ -186,11 +192,6 @@ void Grid::AddSpawner(const Elite::Vector2& spawnerPos)
 		sqrType = SquareType::Spawner;
 	else
 		sqrType = SquareType::Default;
-}
-
-int Grid::AmountGoalsAdded()const
-{
-	return m_AddedGoalsAmount;
 }
 
 size_t Grid::GetGridSqrIdxAtPos(const Elite::Vector2& pos) const
@@ -237,7 +238,6 @@ bool Grid::MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, 
 		targetPos = GetMidOfSquare(newSqrIdx); //next target for the agent = the middle of this new square
 		return true;
 	}
-
 	return false;
 }
 

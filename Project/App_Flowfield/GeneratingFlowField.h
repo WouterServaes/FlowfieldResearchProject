@@ -4,21 +4,21 @@
 
 namespace Algorithms
 {
-	class Algorithm  
+	class Algorithm
 	{
 	public:
 		Algorithm(const Elite::Vector2* gridResolution) :m_pGridResolution(gridResolution) {};
 		virtual ~Algorithm() = default;
 		virtual void RunAlgorithm(int goalNr, size_t goalGridIdx, std::vector<Grid::GridSquare>* pGrid) = 0;
-		void MakeFlowfield(int goalNr,std::vector<Grid::GridSquare>* pGrid, const std::vector<Elite::Vector2>& flowfieldFlowDirections)
+		void MakeFlowfield(int goalNr, std::vector<Grid::GridSquare>* pGrid, const std::vector<Elite::Vector2>& flowfieldFlowDirections)
 		{
 			int max{ int(pGrid->size()) + 1 };
 
 			for (size_t idx{}; idx < pGrid->size(); ++idx)
 			{
 				if (m_DistancesGrid[idx] >= max) continue;
-				auto column{ pGrid->at(idx).column }; //column 
-				auto row{ pGrid->at(idx).row }; //row 
+				auto column{ pGrid->at(idx).column }; //column
+				auto row{ pGrid->at(idx).row }; //row
 
 				int lowestDist{ max };
 				int lowestDistNeighborIdx{};
@@ -28,7 +28,7 @@ namespace Algorithms
 					size_t neighborColumn{ column + size_t(flowfieldFlowDirections[neighborLoopIdx].x) };
 					size_t neighborRow{ row + size_t(flowfieldFlowDirections[neighborLoopIdx].y) };
 
-					if (neighborColumn >= m_pGridResolution->x || neighborColumn < 0) continue; //checking if this "neighbor" is valid 
+					if (neighborColumn >= m_pGridResolution->x || neighborColumn < 0) continue; //checking if this "neighbor" is valid
 					if (neighborRow >= m_pGridResolution->y || neighborRow < 0) continue;
 
 					size_t neighborIdx{ (
@@ -37,7 +37,7 @@ namespace Algorithms
 
 					if (m_DistancesGrid[neighborIdx] <= lowestDist)
 					{
-						if(flowfieldFlowDirections[neighborLoopIdx].y != 0 && flowfieldFlowDirections[neighborLoopIdx].x != 0)
+						if (flowfieldFlowDirections[neighborLoopIdx].y != 0 && flowfieldFlowDirections[neighborLoopIdx].x != 0)
 							if (CheckDiagonalThroughWall(pGrid, flowfieldFlowDirections, neighborLoopIdx, neighborColumn, neighborRow)) continue;
 
 						lowestDistNeighborIdx = neighborLoopIdx;
@@ -47,12 +47,11 @@ namespace Algorithms
 				pGrid->at(idx).flowDirections[goalNr] = flowfieldFlowDirections[lowestDistNeighborIdx];
 			}
 		}
-		
+
 	protected:
 		struct IdxToVisit {
 			size_t idx{};
 			int distance{};
-
 		};
 		std::vector<int> m_DistancesGrid{};
 		const Elite::Vector2* m_pGridResolution{};
@@ -61,9 +60,8 @@ namespace Algorithms
 		bool CheckDiagonalThroughWall(const std::vector<Grid::GridSquare>* pGrid, const std::vector<Elite::Vector2>& flowfieldFlowDirections
 			, const size_t& neighborLoopIdx, const size_t& neighborC, const size_t& neighborR) const
 		{
-
 			//check if the flowfield doesn's go through a wall corner
-				//         
+				//
 				//	xxxxx/---------      => where x are walls and - / is a flow field path.
 				//	----/xxxxxxxxxx				=> instead of doing, the path should go around the walls
 
@@ -82,7 +80,7 @@ namespace Algorithms
 					neighborXneighbor = (neighborC + 1) + size_t(neighborR * m_pGridResolution->x);
 				}
 			}
-			else if(flowfieldFlowDirections[neighborLoopIdx].y < 0)
+			else if (flowfieldFlowDirections[neighborLoopIdx].y < 0)
 			{
 				neighborYneighbor = neighborC + size_t((neighborR + 1) * m_pGridResolution->x);
 
@@ -100,8 +98,8 @@ namespace Algorithms
 				pGrid->at(neighborXneighbor).squareType == Grid::SquareType::Obstacle);
 		}
 	};
-		
-	class Dijkstra final:public Algorithm
+
+	class Dijkstra final :public Algorithm
 	{
 	public:
 		Dijkstra(const Elite::Vector2* gridResolution) :Algorithm(gridResolution) {};
@@ -110,7 +108,7 @@ namespace Algorithms
 		{
 			m_DistancesGrid.clear();
 
-			//to visit vector 
+			//to visit vector
 			std::vector<IdxToVisit>toVisit{};
 
 			//max distance + 1, used for unexplored indexes
@@ -149,7 +147,6 @@ namespace Algorithms
 				}
 			}
 
-
 			//===========================================================================
 			//================= Dijkstra algorithm ======================================
 			//===========================================================================
@@ -179,7 +176,6 @@ namespace Algorithms
 					}
 				}
 			}
-
 		}
 	};
 }
