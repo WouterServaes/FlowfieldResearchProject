@@ -22,7 +22,7 @@ public:
 	Elite::Vector2& CurrentTargetPos() { return m_CurrentTargetPos; }; //returns current target position
 
 	//removing agent
-	bool IsMarkedForRemove()const { return m_MarkForRemove; };
+	bool IsMarkedForRemove()const { return m_MarkForRemove; }; //true: agent will be removed by App
 private:
 	SteeringAgent* m_pAgent{}; 
 	Seek* m_pBehavior{}; 
@@ -30,13 +30,13 @@ private:
 	Elite::Color m_AgentDefaultColor{ 0.f, 0.f, 0.f },
 		m_AgentHightlightColor{ 0.f, 0.f, 1.f };
 
-	int m_CurrentEndGoalIdx{ 0 };
-	Elite::Vector2 m_CurrentTargetPos{ 0.f, 0.f };
+	int m_CurrentEndGoalIdx{ 0 }; //current goal of agent (flowfield it has to follow)
+	Elite::Vector2 m_CurrentTargetPos{ 0.f, 0.f }; //position of this goal
 
 	bool m_ReachedGoal{ false };
 
 	//removing agent
 	bool m_MarkForRemove{ false };
 	float m_DeleteElapsedSec{};
-	const float m_DeleteTime{ .2f };
+	const float m_DeleteTime{ .2f }; //time it takes to be deleted after reaching goal
 };

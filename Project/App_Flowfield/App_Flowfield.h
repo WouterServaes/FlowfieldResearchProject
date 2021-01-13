@@ -31,34 +31,42 @@ private:
 		Elite::Vector2 location{};
 		int agentsSpawned{};
 	};
+	//agents
+	void SpawnAgents(); //spawn all agents at random positions
+	void SpawnAgent(const Elite::Vector2& pos); //spawns one agent at pos
+	void ResetAgents(); //removes every agent
 
-	void SpawnAgents();
-	void SpawnAgent(const Elite::Vector2& pos);
-	void ContinueAgentSpawning(const Elite::Vector2& pos);
-	void HandleImGui();
-	void HandleMouseInput();
-	void HandleKeyboardInput();
-	void HandleAgentUpdate(float deltaTime);
+	//general handle function
+	void HandleImGui(); //UI
+	void HandleMouseInput(); // mouse input
+	void HandleKeyboardInput(); //keyboard input
+	void HandleAgentUpdate(float deltaTime); //agent update
 
-	void AddSpawners();
-	void UseSpawners(float deltaTime);
+	//spawners
+	void AddSpawners();  
+	void UseSpawners(float deltaTime); //goes over spawners and spawns an agent when it's time
 
+	//files
 	void SaveToFile();
 	void ReadFromFile();
 
-	void ResetAgents();
-	std::vector<FlowfieldAgent*>* m_pAgents{};
-	Grid* m_pGrid;
+	std::vector<FlowfieldAgent*>* m_pAgents{}; //agents
+	Grid* m_pGrid; //the grid
 
-	bool m_TrimWorld{ false }, m_SpawnAgents{ false }, m_UseSpawners{ false }, m_KillAtGoal{ true }, m_AddAgentsWithMouse{ false },
-		m_MadeObstacles{ false }, m_MadeGoals{ false }, m_MadeFlowfield{ false };
+	bool m_SpawnAgents{ false },
+		m_UseSpawners{ false },
+		m_KillAtGoal{ true }, //remove an agent when it reaches its goal
+		m_MadeObstacles{ false }, //finished placing obstacles (for initial ff)
+		m_MadeGoals{ false }, //finished placing goals
+		m_MadeFlowfield{ false }; //made the flowfield (initial ff)
 
-	float m_TrimWorldSize{}, m_AgentSpawnWithMouseElapsedSec{};
-
-	int m_StartAmountAgents{ 5 }, m_FlowfieldToDraw{ 0 }, m_AmountOfGoals{};
+	
+	int m_StartAmountAgents{ 5 }, //amount of agents 
+		m_FlowfieldToDraw{ 0 }, //nr of ff to draw 
+		m_AmountOfGoals{}; //amount of goals
 
 	Grid::SquareType m_TypeToPlace{ Grid::SquareType::Default };
 	std::vector< Spawner*> m_pSpawners{};
-	const float m_TimePerSpawn{ .2f };
+	const float m_TimePerSpawn{ .2f }; //time per spawn (for all spawners)
 };
 #endif

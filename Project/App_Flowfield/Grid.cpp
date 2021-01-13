@@ -230,12 +230,10 @@ void Grid::MakeGoalVector()
 
 void Grid::MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr)
 {
-	
-		const auto sqrIdx{ GetGridSqrIdxAtPos(currentPos) }; //sqr index of square the agent is currently in
-		const auto nextSqrPosFromDirection{ currentPos + (m_pGrid->at(sqrIdx).flowDirections[goalNr].GetNormalized() * (m_SquareSize.x + (m_SquareSize.x / 2))) }; //a position from the current position of the agent along the direction the agent should be following over a length (1.5 a square's length)
-		const auto newSqrIdx{ GetGridSqrIdxAtPos(nextSqrPosFromDirection) }; //the square idx of the square at this new position
-		targetPos = GetMidOfSquare(newSqrIdx); //next target for the agent = the middle of this new square
-
+	const auto sqrIdx{ GetGridSqrIdxAtPos(currentPos) }; //sqr index of square the agent is currently in
+	const auto nextSqrPosFromDirection{ currentPos + (m_pGrid->at(sqrIdx).flowDirections[goalNr].GetNormalized() * (m_SquareSize.x + (m_SquareSize.x / 2))) }; //a position from the current position of the agent along the direction the agent should be following over a length (1.5 a square's length)
+	const auto newSqrIdx{ GetGridSqrIdxAtPos(nextSqrPosFromDirection) }; //the square idx of the square at this new position
+	targetPos = GetMidOfSquare(newSqrIdx); //next target for the agent = the middle of this new square
 }
 
 int Grid::GetNewGoal(int currentGoal) const
@@ -276,7 +274,7 @@ bool Grid::IsPointInGrid(const Elite::Vector2& point)
 void Grid::MakeFlowfield()
 {
 	const std::vector<Elite::Vector2> flowfieldFlowDirections = {
-		{ 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 }, { 0, -1 }, { 1, -1 } }; //every square around a square
+		{ 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 }, { -1, -1 }, { 0, -1 }, { 1, -1 } }; //every square around a square (also diagonals)
 
 		//finding a goals
 	std::vector<size_t> goalIndxs{};

@@ -17,8 +17,8 @@ namespace Algorithms
 			for (size_t idx{}; idx < pGrid->size(); ++idx)
 			{
 				if (m_DistancesGrid[idx] >= max) continue;
-				auto column{ pGrid->at(idx).column }; //column
-				auto row{ pGrid->at(idx).row }; //row
+				auto column{ pGrid->at(idx).column }; 
+				auto row{ pGrid->at(idx).row }; 
 
 				int lowestDist{ max };
 				int lowestDistNeighborIdx{};
@@ -67,6 +67,8 @@ namespace Algorithms
 
 			size_t neighborYneighbor{}, //neighbor of neighbor either below or above original neighbor
 				neighborXneighbor{};	//neighbor of neighbor either left or right of original neighbor
+
+			//there's probably a better way of doing this hm
 			if (flowfieldFlowDirections[neighborLoopIdx].y > 0)
 			{
 				neighborYneighbor = neighborC + size_t((neighborR - 1) * m_pGridResolution->x);
@@ -162,7 +164,8 @@ namespace Algorithms
 					size_t neighborColumn{ toVisitColumn + size_t(neighbor.x) };
 					size_t neighborRow{ size_t(toVisitRow + neighbor.y) };
 
-					if (neighborColumn >= m_pGridResolution->x || neighborColumn < 0) continue; //checking if this "neighbor" is valid (if it's out the grid this will be a very large number) it's a nasty fix I know
+					//checking if this "neighbor" is valid (if it's out the grid this will be a very large number) it's a nasty fix I know
+					if (neighborColumn >= m_pGridResolution->x || neighborColumn < 0) continue; 
 					if (neighborRow >= m_pGridResolution->y || neighborRow < 0) continue;
 
 					size_t neighborIdx{ (

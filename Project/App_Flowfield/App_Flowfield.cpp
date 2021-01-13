@@ -19,18 +19,14 @@ App_Flowfield::~App_Flowfield()
 //Functions
 void App_Flowfield::Start()
 {
-	m_TrimWorldSize = 500.f;
-
-	m_pGrid = new Grid(Elite::Vector2(m_TrimWorldSize, m_TrimWorldSize), Elite::Vector2(50.f, 50.f));
+	Elite::Vector2 worldSize{ 500.f, 500.f };
+	m_pGrid = new Grid(worldSize, Elite::Vector2(50.f, 50.f));
 
 	m_pAgents = new std::vector< FlowfieldAgent*>();
 }
 
 void App_Flowfield::Update(float deltaTime)
 {
-	if (m_AddAgentsWithMouse)
-		m_AgentSpawnWithMouseElapsedSec += deltaTime;
-
 	if (m_SpawnAgents && m_UseSpawners)
 		UseSpawners(deltaTime);
 
@@ -54,23 +50,11 @@ void App_Flowfield::Render(float deltaTime) const
 	{
 		a->RenderAgent(deltaTime, m_FlowfieldToDraw);
 	}
-
-	if (m_TrimWorld)
-	{
-		vector<Elite::Vector2> points =
-		{
-			{ -m_TrimWorldSize, m_TrimWorldSize },
-			{ m_TrimWorldSize, m_TrimWorldSize },
-			{ m_TrimWorldSize, -m_TrimWorldSize },
-			{ -m_TrimWorldSize, -m_TrimWorldSize }
-		};
-		DEBUGRENDERER2D->DrawPolygon(&points[0], 4, { 1, 0, 0, 1 }, 0.4f);
-	}
 }
 
 void App_Flowfield::SpawnAgents()
 {
-	if (m_UseSpawners) return;;
+	if (m_UseSpawners) return;
 	for (size_t idx{}; idx < m_StartAmountAgents; ++idx)
 		SpawnAgent(m_pGrid->GetValidRandomPos());
 }
@@ -215,7 +199,10 @@ void App_Flowfield::HandleImGui()
 		if (m_SpawnAgents && m_MadeFlowfield)
 		{
 			if (ImGui::Button("reset agents"))
+			{
 				ResetAgents();
+				m_SpawnAgents = false;
+			}
 		}
 		//---
 		ImGui::Spacing();
@@ -288,14 +275,8 @@ void App_Flowfield::HandleMouseInput()
 		auto mousePos{ DEBUGRENDERER2D->GetActiveCamera()->ConvertScreenToWorld({ static_cast<float>(mouseData.X), static_cast<float>(mouseData.Y) }) };
 
 		if (!m_pGrid->IsPointInGrid(mousePos)) return;
-		m_AddAgentsWithMouse = true;
 
-		ContinueAgentSpawning(mousePos);
-	}
-
-	if (INPUTMANAGER->IsMouseButtonUp(InputMouseButton::eMiddle))
-	{
-		m_AddAgentsWithMouse = false;
+		SpawnAgent(mousePos);
 	}
 }
 
@@ -422,13 +403,6 @@ void App_Flowfield::UseSpawners(float deltaTime)
 			}
 		}
 	}
-}
-
-void App_Flowfield::ContinueAgentSpawning(const Elite::Vector2& pos)
-{
-	//if (m_AgentSpawnWithMouseElapsedSec < .2f) return;
-	m_AgentSpawnWithMouseElapsedSec = 0.f;
-	SpawnAgent(pos);
 }
 
 void App_Flowfield::ResetAgents()
