@@ -11,6 +11,9 @@ Research project about Flowfields. Part of first semester Exam Assignment for Ga
        - [Dijkstra](#dijkstraAlgo)
           - [Dijkstra in short](#dijkstraInShort)
        - [Making flow field](#makingFlowField)
+       - [Handling the agents](#agentHandling)
+          -[Moving agent in directio](#movingAgent)
+- [Extras](#extras)
 
 ## Program overview <a name ="overview"></a>
 Program starts with a blank 500x500 world. Spawnpoints, obstacles and goals can be places onto the world. The agents will either spawn at a random location in the world when no spawn points are present or spawn at spawnpoints over time. Agents will collide with obstalces and with other agents. Every agent will go to a random goal when spawned into the world. There has to be atleast one goal present in the world. If only one goal is present in the world and an agent reaches this goal, they despawn. If more than one goals are present in the world the agents can go to a next, random, goal unless the "remove at goal" checkbox is checked, they'll despawn if this is checked. A world can either be made by manually clicking on tiles or by loading in one of the saved file in the "Environments" folder, created worlds can be saved to a new file in this folder.
@@ -33,14 +36,14 @@ premade worlds
 
 ## Flow field implementation <a name ="implementation"></a>
 ### Explanation <a name ="flowfieldExplanation"></a>
-For every goal in the world, an algorithm (Dijkstra) goes over the grid, sets the distance costs per tile for this goal. When every tile has a distance cost for this goal, go over the tiles again. Set the direction of this tile to point to the neighbor with the lowest distance cost, diagonals allowed (watch out with diagonals through walls).   
+For every goal in the world, an algorithm ([Dijkstra](#dijkstraAlgo)) goes over the grid, sets the distance costs per tile for this goal. When every tile has a distance cost for this goal, go over the tiles again. Set the direction of this tile to point to the neighbor with the lowest distance cost, diagonals allowed (watch out with diagonals through walls).   
 Every agent as a goal, the agent will follow the direction of the square it's currently on to it's goal. The agent does this using a basic seek movement behavior. I set the target of this behavior to the middle of the grid the direction points to, when the agent is close to this target, a new target is made.  
 Obstacles can be placed while it's running, when an obstacle is placed, the flow fields get remade.
 ### Code <a name ="flowfieldCode"></a>
 _[Generating Flowfield File](Project/App_Flowfield/GeneratingFlowField.h)_
 #### Starting in Grid.cpp <a name ="startingInGrid"></a>
 
-I make the flow fields in the [Grid.cpp](Project/App_Flowfield/Grid.cpp). First, I define the directions the flow field can go to (every direction, including diagonals). Then, I search for all the goals in the grid and go over each goal, as each goal has to have flowfield. For every goal, I run the algorithm, Dijkstra, and make the flowfield. Every grid square has a [GridSquare struct](#gridSquareStruct), which has a std::vector of Elite::Vector2 type attribute: flowDirections ([to code](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/Grid.cpp#L274)). 
+I make the flow fields in the [Grid.cpp](Project/App_Flowfield/Grid.cpp). First, I define the directions the flow field can go to (every direction, including diagonals). Then, I search for all the goals in the grid and go over each goal, as each goal has to have flowfield. For every goal, I run the algorithm, [Dijkstra](#dijkstraAlgo), and make the flowfield. Every grid square has a [GridSquare struct](#gridSquareStruct), which has a std::vector of Elite::Vector2 type attribute: flowDirections ([to code](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/Grid.cpp#L274)). 
 ```cpp
 void Grid::MakeFlowfield()
 {
@@ -137,9 +140,56 @@ In short <a name="dijkstraInShort"></a>
                2. Add this neighbor to toVisit
      
 #### Making flow field <a name="makingFlowField"></a>
-I go over every square from the grid
+I go over every grid square. If the distance cost of this square is >= max (obstacle), I go to the next one. I check all the (valid) neighbors of this square, diagonals included, and set the direction of the square to point to the neighbor with the lowest distance cost. To avoid the direction going diagonally through a wall, I check this first and skip this neighbors if this is the case ([to code](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/GeneratingFlowField.h#L60)).
+```cpp
+for (size_t idx{}; idx < pGrid->size(); ++idx)
+{
+	if (m_DistancesGrid[idx] >= max) continue;
+	auto column{ pGrid->at(idx).column }; 
+	auto row{ pGrid->at(idx).row }; 
 
+	int lowestDist{ max };
+	int lowestDistNeighborIdx{};
 
+	for (size_t neighborLoopIdx{}; neighborLoopIdx < flowfieldFlowDirections.size(); ++neighborLoopIdx)
+	{
+		size_t neighborColumn{ column + size_t(flowfieldFlowDirections[neighborLoopIdx].x) };
+		size_t neighborRow{ row + size_t(flowfieldFlowDirections[neighborLoopIdx].y) };
+
+		if (neighborColumn >= m_pGridResolution->x || neighborColumn < 0) continue; 
+		if (neighborRow >= m_pGridResolution->y || neighborRow < 0) continue;
+
+		size_t neighborIdx{ (
+			neighborColumn +
+			size_t(neighborRow * m_pGridResolution->x)) }; //index of this neighbor in the grid
+
+		if (m_DistancesGrid[neighborIdx] <= lowestDist)
+		{
+			if (flowfieldFlowDirections[neighborLoopIdx].y != 0 && flowfieldFlowDirection[neighborLoopIdx].x != 0)
+				if (CheckDiagonalThroughWall(pGrid, flowfieldFlowDirections, neighborLoopIdx, neighborColumn,neighborRow)) continue;
+
+			lowestDistNeighborIdx = neighborLoopIdx;
+			lowestDist = m_DistancesGrid[neighborIdx];
+		}
+	}
+	pGrid->at(idx).flowDirections[goalNr] = flowfieldFlowDirections[lowestDistNeighborIdx];
+}
+```
+#### Handling the agents <a name = "agentHandling"></a>
+I update all the agents in  [App_Flowfield.cpp](Project/App_Flowfield/App_Flowfield.cpp):: [HandleAgentUpdate](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/App_Flowfield.cpp#L295). I go over every agent and check if this agent has reached its goal. If it has, I mark it for removal if you decide to remove the agent at the goal. If it has reached its goal but the agent shouldn't be removed, it gets a new, random, goal. If the agent has not reached its goal, I call MoveSqr from the grid (more info below) and update the agent itself ([to agent Update function](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/FlowfieldAgent.cpp#L31)). After going over all the agents, I go over them again and remove the ones marked for remove ([to code](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/App_Flowfield.cpp#L326)).
+
+##### Moving agent <a name="movingAgent"></a>
+To set a new target for the agent, I get the square idx of the position the agent is at [to code GetGridSqrIdxAtPos()](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/Grid.cpp#L197). I go in the direction of the goalNr (flow field nr) of this square and get a position in the next square. I then get the idx of this new square and set the new target for this agent to the middle of this new squares
+```cpp
+void Grid::MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr)
+{
+	const auto sqrIdx{ GetGridSqrIdxAtPos(currentPos) }; 
+	const auto nextSqrPosFromDirection{ currentPos + (m_pGrid->at(sqrIdx).flowDirections[goalNr].GetNormalized() * (m_SquareSize.x + (m_SquareSize.x / 2))) }; 
+	const auto newSqrIdx{ GetGridSqrIdxAtPos(nextSqrPosFromDirection) }; 
+	targetPos = GetMidOfSquare(newSqrIdx); 
+}
+```
+## Extras <a name="Extras"></a>
   For this project I used the Elite Engine framework, authors of this framework are Matthieu Delaere and Thomas Goussaert. 
 
 
