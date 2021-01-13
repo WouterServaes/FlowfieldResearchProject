@@ -1,4 +1,5 @@
 # Flowfield Research Project
+##### this repo does NOT include "included" folders (Box2D, Gl, ImGui, SDL2, VLD), "data" folder (shaders) and "lib" folders, as such, a simple download will NOT work. This repo is only here to explain my implementation of flow fields
 Research project about Flowfields. Part of first semester Exam Assignment for Gameplay Programming, a second year course at Howest - [Digital Arts and Entertainment](https://digitalartsandentertainment.be/) 
 
 ## Table of contents
@@ -19,11 +20,10 @@ Research project about Flowfields. Part of first semester Exam Assignment for Ga
 Program starts with a blank 500x500 world. Spawnpoints, obstacles and goals can be places onto the world. The agents will either spawn at a random location in the world when no spawn points are present or spawn at spawnpoints over time. Agents will collide with obstalces and with other agents. Every agent will go to a random goal when spawned into the world. There has to be atleast one goal present in the world. If only one goal is present in the world and an agent reaches this goal, they despawn. If more than one goals are present in the world the agents can go to a next, random, goal unless the "remove at goal" checkbox is checked, they'll despawn if this is checked. A world can either be made by manually clicking on tiles or by loading in one of the saved file in the "Environments" folder, created worlds can be saved to a new file in this folder.
 ### Making the world <a name ="makingWorld"></a>
 You can load in a pre made world by clicking "use from file" and writing a correct file name in the console. (all pre made worlds are listed below).  
-To make your own world, use LMB to "place" the environment. Clicking a placed tile will remove it. Tile types can be switched by pressing 1 to 4 on the keyboard.
+To make your own world, use LMB to "place" the environment. Clicking a placed tile will remove it. Tile types can be switched by pressing 1 to 3 on the keyboard.
 - 1: Goal* 
 - 2: Obstacle
 - 3: Spawner**
-- 4: empty tile  
 \*One goal is required.  
 \*\*No spawner are  required, agents will spawn at a random location if there are no spawners.
 
@@ -179,7 +179,7 @@ for (size_t idx{}; idx < pGrid->size(); ++idx)
 I update all the agents in  [App_Flowfield.cpp](Project/App_Flowfield/App_Flowfield.cpp):: [HandleAgentUpdate](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/App_Flowfield.cpp#L295). I go over every agent and check if this agent has reached its goal. If it has, I mark it for removal if you decide to remove the agent at the goal. If it has reached its goal but the agent shouldn't be removed, it gets a new, random, goal. If the agent has not reached its goal, I call MoveSqr from the grid (more info below) and update the agent itself ([to agent Update function](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/FlowfieldAgent.cpp#L31)). After going over all the agents, I go over them again and remove the ones marked for remove ([to code](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/App_Flowfield.cpp#L326)).
 
 ##### Moving agent <a name="movingAgent"></a>
-To set a new target for the agent, I get the square idx of the position the agent is at [to code GetGridSqrIdxAtPos()](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/Grid.cpp#L197). I go in the direction of the goalNr (flow field nr) of this square and get a position in the next square. I then get the idx of this new square and set the new target for this agent to the middle of this new squares
+To set a new target for the agent, I get the square idx of the position the agent is at [to code GetGridSqrIdxAtPos()](https://github.com/WouterServaes/FlowfieldResearchProject/blob/aa795e2cebb96aec2524997e73cfefde78cc3de9/Project/App_Flowfield/Grid.cpp#L197). I go in the direction of the goalNr (flow field nr) of this square and get a position in the next square. I then get the idx of this new square and set the new target for this agent to the middle of this new squares.
 ```cpp
 void Grid::MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, int goalNr)
 {
@@ -189,6 +189,7 @@ void Grid::MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, 
 	targetPos = GetMidOfSquare(newSqrIdx); 
 }
 ```
+The agent movement itself is handled by a simple Seek movement behavior, seeking this targetPos.
 ## Extras <a name="Extras"></a>
   For this project I used the Elite Engine framework, authors of this framework are Matthieu Delaere and Thomas Goussaert. 
 
