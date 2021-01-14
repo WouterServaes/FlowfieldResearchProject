@@ -1,5 +1,5 @@
 # Flowfield Research Project
-##### this repo does NOT include "included" folders (Box2D, Gl, ImGui, SDL2, VLD), "data" folder (shaders) and "lib" folders, as such, a simple download will NOT work. This repo is only here to explain my implementation of flow fields
+##### this repo does NOT include "included" folders (Box2D, Gl, ImGui, SDL2, VLD), "data" folder (shaders) and "lib" folders, as such, a simple download will NOT work. This repo is only here to explain my implementation of flow fields.
 Research project about Flowfields. Part of first semester Exam Assignment for Gameplay Programming, a second year course at Howest - [Digital Arts and Entertainment](https://digitalartsandentertainment.be/) 
 
 ## Table of contents
@@ -13,8 +13,13 @@ Research project about Flowfields. Part of first semester Exam Assignment for Ga
           - [Dijkstra in short](#dijkstraInShort)
        - [Making flow field](#makingFlowField)
        - [Handling the agents](#agentHandling)
-          -[Moving agent in directio](#movingAgent)
+          - [Moving agent in directio](#movingAgent)
 - [Extras](#extras)
+     - [Placing obstacles](#placingObstacles)
+     - [Resetting agents](#resettingAgents)
+     - [Placing agents](#placingAgents)
+     - [Focusing on a flow field](#focus)
+- [End](#end)
 
 ## Program overview <a name ="overview"></a>
 Program starts with a blank 500x500 world. Spawnpoints, obstacles and goals can be places onto the world. The agents will either spawn at a random location in the world when no spawn points are present or spawn at spawnpoints over time. Agents will collide with obstalces and with other agents. Every agent will go to a random goal when spawned into the world. There has to be atleast one goal present in the world. If only one goal is present in the world and an agent reaches this goal, they despawn. If more than one goals are present in the world the agents can go to a next, random, goal unless the "remove at goal" checkbox is checked, they'll despawn if this is checked. A world can either be made by manually clicking on tiles or by loading in one of the saved file in the "Environments" folder, created worlds can be saved to a new file in this folder.
@@ -190,8 +195,22 @@ void Grid::MoveSqr(const Elite::Vector2& currentPos, Elite::Vector2& targetPos, 
 }
 ```
 The agent movement itself is handled by a simple Seek movement behavior, seeking this targetPos.
-## Extras <a name="Extras"></a>
-  For this project I used the Elite Engine framework, authors of this framework are Matthieu Delaere and Thomas Goussaert. 
+## Extras <a name="extras"></a>
+### Placing obstacles <a name="placingObstacles"></a>
+Obstacles can be placed while the agents are running across the grid. Placing an obstacle will remake every flow field. This has barely any impact on performance as the agents themselves don't have to remake a path, they keep following the directions beneath them.
+### Resetting agents <a name="resettingAgents"></a>
+When "reset agents" is clicked, every agent gets removed from the grid. Allowing you to work on the environment again. Agents can be spawned back in by clicking "spawn agents"
+### Placing agents <a name = "placingAgents"></a>
+Agents can be placed down with MMB. When an agent is spawned, it gets a random goal. 
+### Focusing on a specific flow field <a name="focus"></a>
+You can focus on a flowfield by sliding the slider in the ImGui menu on the right. This will highlight all the agents following this flow field and the goal this flow field is "flowing" to.
+
+## End <a name="end"></a>
+I hope I explained my implementation of flow fields good enough. If you have any questions, shoot. 
+Connect with me on [LinkedIn](https://www.linkedin.com/in/wouterservaes-dae/). I am sorry for not adding any pictures, just imagine 5000 agents all going to their own goal in a 500x500 world :).   
+
+  
+For this project I used the Elite Engine framework, authors of this framework are Matthieu Delaere and Thomas Goussaert. 
 
 
 
