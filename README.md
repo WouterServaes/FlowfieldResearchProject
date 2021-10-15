@@ -19,17 +19,19 @@ Research project about Flowfields. Part of first semester Exam Assignment for Ga
      - [Resetting agents](#resettingAgents)
      - [Placing agents](#placingAgents)
      - [Focusing on a flow field](#focus)
+- [Framework](#framework)
 - [End](#end)
 
 ## Program overview <a name ="overview"></a>
 Program starts with a blank 500x500 world. Spawnpoints, obstacles and goals can be places onto the world. The agents will either spawn at a random location in the world when no spawn points are present or spawn at spawnpoints over time. Agents will collide with obstalces and with other agents. Every agent will go to a random goal when spawned into the world. There has to be atleast one goal present in the world. If only one goal is present in the world and an agent reaches this goal, they despawn. If more than one goals are present in the world the agents can go to a next, random, goal unless the "remove at goal" checkbox is checked, they'll despawn if this is checked. A world can either be made by manually clicking on tiles or by loading in one of the saved file in the "Environments" folder, created worlds can be saved to a new file in this folder.
-![Screenshot of program](https://github.com/WouterServaes/FlowfieldResearchProject/blob/master/Images/Flowfield0_Img03.png) ![Screenshot of program](https://github.com/WouterServaes/FlowfieldResearchProject/blob/master/Images/Flowfield0_TitleImg.gif) 
+![Screenshot of program](https://github.com/WouterServaes/FlowfieldResearchProject/blob/master/Images/Flowfield0_Img03.png) ![Gif of flowfield in action](https://github.com/WouterServaes/FlowfieldResearchProject/blob/master/Images/Flowfield0_TitleImg.gif) 
 ### Making the world <a name ="makingWorld"></a>
 You can load in a pre made world by clicking "use from file" and writing a correct file name in the console. (all pre made worlds are listed below).  
 To make your own world, use LMB to "place" the environment. Clicking a placed tile will remove it. Tile types can be switched by pressing 1 to 3 on the keyboard.
 - 1: Goal* 
 - 2: Obstacle
-- 3: Spawner**
+- 3: Spawner** 
+
 \*One goal is required.  
 \*\*No spawner are  required, agents will spawn at a random location if there are no spawners.
 
@@ -39,6 +41,8 @@ premade worlds
 - Env_03.txt
 - Env_04.txt
 - Env_05.txt
+
+![Gif of flowfield in action](https://github.com/WouterServaes/FlowfieldResearchProject/blob/master/Images/Flowfield0_Img02.gif) 
 
 ## Flow field implementation <a name ="implementation"></a>
 ### Explanation <a name ="flowfieldExplanation"></a>
@@ -206,12 +210,14 @@ Agents can be placed down with MMB. When an agent is spawned, it gets a random g
 ### Focusing on a specific flow field <a name="focus"></a>
 You can focus on a flowfield by sliding the slider in the ImGui menu on the right. This will highlight all the agents following this flow field and the goal this flow field is "flowing" to.
 
+## Frameworkd <a name="framework"></a>
+For this project I used the Elite Engine framework, authors of this framework are Matthieu Delaere and Thomas Goussaert. Provided during the course.
+
 ## End <a name="end"></a>
 I hope I explained my implementation of flow fields good enough. If you have any questions, shoot. 
-Connect with me on [LinkedIn](https://www.linkedin.com/in/wouterservaes-dae/). I am sorry for not adding any pictures, just imagine 5000 agents all going to their own goal in a 500x500 world :).   
+Connect with me on [LinkedIn](https://www.linkedin.com/in/wouterservaes-dae/)!  
 
   
-For this project I used the Elite Engine framework, authors of this framework are Matthieu Delaere and Thomas Goussaert. 
 
 
 
