@@ -1,6 +1,9 @@
 # Flowfield Research Project
+Connect with me on [LinkedIn](https://www.linkedin.com/in/wouterservaes-dae/)! 
+
+View my portfolio [here](https://wouterservaes.myportfolio.com/)!
 ##### this repo does NOT include "included" folders (Box2D, Gl, ImGui, SDL2, VLD), "data" folder (shaders) and "lib" folders, as such, a simple download will NOT work. This repo is only here to explain my implementation of flow fields.
-Research project about Flowfields. Part of first semester Exam Assignment for Gameplay Programming, a second year course at Howest - [Digital Arts and Entertainment](https://digitalartsandentertainment.be/) 
+Research project about Flowfields. Part of the Exam Assignment for Gameplay Programming, a second year course at Howest - [Digital Arts and Entertainment](https://digitalartsandentertainment.be/). 
 
 ## Table of contents
 - [Program overview](#overview)  
