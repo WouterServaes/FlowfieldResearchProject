@@ -216,8 +216,7 @@ You can focus on a flowfield by sliding the slider in the ImGui menu on the righ
 ## Frameworkd <a name="framework"></a>
 For this project I used the Elite Engine framework, authors of this framework are Matthieu Delaere and Thomas Goussaert. Provided during the course.
 
-## End <a name="end"></a>
-I hope I explained my implementation of flow fields good enough. If you have any questions, shoot. 
+## End <a name="end"></a> 
 Connect with me on [LinkedIn](https://www.linkedin.com/in/wouterservaes-dae/)!  
 
   
